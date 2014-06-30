@@ -1,4 +1,4 @@
 py-finvoice
-===========
+============
 
-Python module for generating Finvoice invoices.
+Python module for generating Finvoice invoices
