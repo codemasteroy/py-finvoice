@@ -27,9 +27,12 @@ from finvoice.sender.senderinfo import date
 
 from finvoice.soap.envelope import Envelope, Header, Body
 from finvoice.soap.msgheader import MessageHeader, From, To, PartyId, Service, MessageData
+from finvoice.soap.msgheader import Manifest, Reference, Schema
+
+from pytz import reference
 
 # Date
-nowDate = date( "CCYYMMDD", datetime.datetime.today().date().strftime("%Y%m%d") )
+nowDate = date( "CCYYMMDD", datetime.datetime.now( reference.LocalTimezone() ).date().strftime("%Y%m%d") )
 
 # Seller Postal Address
 # SellerStreetName=None, SellerTownName=None, SellerPostCodeIdentifier=None, CountryCode=None, CountryName=None, SellerPostOfficeBoxIdentifier=None
@@ -136,7 +139,9 @@ messageHeader.set_CPAId( "yoursandmycpa" )
 messageHeader.set_Service( Service( None, "Routing" ) )
 messageHeader.set_Action( "ProcessInvoice" )
 
-msgData = MessageData( _messageId, datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z") )
+_now = datetime.datetime.now( reference.LocalTimezone() )
+_nowS = datetime.datetime( _now.year, _now.month, _now.day, _now.hour, _now.minute, _now.second, 0, _now.tzinfo )
+msgData = MessageData( _messageId + '/1', _nowS )
 
 messageHeader.set_MessageData( msgData )
 
@@ -144,9 +149,19 @@ messageHeader.set_MessageData( msgData )
 
 envelope.set_Header( header )
 
+manifest = Manifest( "2.0", "Manifest" )
+reference = Reference( None, _messageId, None, "FinvoiceSenderInfo" )
+manifest.add_Reference( reference )
+reference.add_Schema( Schema( "2.0", "http://www.pankkiyhdistys.fi/verkkolasku/finvoice/FinvoiceSenderInfo.xsd" ) )
+
+body = Body( )
+body.add_anytypeobjs_( manifest )
+
+envelope.set_Body( body )
+
 envelope.export( sys.stdout, 0, pretty_print=True )
 
 encodingHeader = '<?xml version="1.0" encoding="' + ExternalEncoding + '" ?>\n'
-#sys.stdout.write( encodingHeader )
-#sys.stdout.write( '<?xml-stylesheet type="text/xsl" href="FinvoiceSenderInfo.xsl"?>\n' )
-#senderInfo.export( sys.stdout, 0, name_='FinvoiceSenderInfo', namespacedef_='xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FinvoiceSenderInfo.xsd"', pretty_print=True )
+sys.stdout.write( encodingHeader )
+sys.stdout.write( '<?xml-stylesheet type="text/xsl" href="FinvoiceSenderInfo.xsl"?>\n' )
+senderInfo.export( sys.stdout, 0, name_='FinvoiceSenderInfo', namespacedef_='xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FinvoiceSenderInfo.xsd"', pretty_print=True )

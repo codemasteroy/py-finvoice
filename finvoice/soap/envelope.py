@@ -1003,7 +1003,8 @@ class Body(GeneratedsSuper):
         else:
             eol_ = ''
         for obj_ in self.anytypeobjs_:
-            obj_.export(outfile, level, namespace_, pretty_print=pretty_print)
+            # Children can be of any namespace so don't include namespace
+            obj_.export(outfile, level, pretty_print=pretty_print)
     def exportLiteral(self, outfile, level, name_='Body'):
         level += 1
         already_processed = set()

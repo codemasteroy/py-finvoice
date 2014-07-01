@@ -182,7 +182,7 @@ except ImportError, exp:
                     input_data.day,
                     input_data.hour,
                     input_data.minute,
-                    input_data.second
+                    input_data.second,
                 )
             else:
                 _svalue = '%04d-%02d-%02dT%02d:%02d:%02d.%s' % (
@@ -692,10 +692,10 @@ class Manifest(GeneratedsSuper):
     def exportAttributes(self, outfile, level, already_processed, namespace_='eb:', name_='Manifest'):
         if self.version is not None and 'version' not in already_processed:
             already_processed.add('version')
-            outfile.write(' version=%s' % (self.gds_format_string(quote_attrib(self.version).encode(ExternalEncoding), input_name='version'), ))
+            outfile.write(' eb:version=%s' % (self.gds_format_string(quote_attrib(self.version).encode(ExternalEncoding), input_name='version'), ))
         if self.id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
+            outfile.write(' eb:id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
     def exportChildren(self, outfile, level, namespace_='eb:', name_='Manifest', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
@@ -886,13 +886,13 @@ class Reference(GeneratedsSuper):
             outfile.write(' role=%s' % (self.gds_format_string(quote_attrib(self.role).encode(ExternalEncoding), input_name='role'), ))
         if self.href is not None and 'href' not in already_processed:
             already_processed.add('href')
-            outfile.write(' href=%s' % (self.gds_format_string(quote_attrib(self.href).encode(ExternalEncoding), input_name='href'), ))
+            outfile.write(' xlink:href=%s' % (self.gds_format_string(quote_attrib(self.href).encode(ExternalEncoding), input_name='href'), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_format_string(quote_attrib(self.type_).encode(ExternalEncoding), input_name='type'), ))
         if self.id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
+            outfile.write(' eb:id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
     def exportChildren(self, outfile, level, namespace_='eb:', name_='Reference', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
@@ -1053,10 +1053,10 @@ class Schema(GeneratedsSuper):
     def exportAttributes(self, outfile, level, already_processed, namespace_='eb:', name_='Schema'):
         if self.version is not None and 'version' not in already_processed:
             already_processed.add('version')
-            outfile.write(' version=%s' % (quote_attrib(self.version), ))
+            outfile.write(' eb:version=%s' % (quote_attrib(self.version), ))
         if self.location is not None and 'location' not in already_processed:
             already_processed.add('location')
-            outfile.write(' location=%s' % (self.gds_format_string(quote_attrib(self.location).encode(ExternalEncoding), input_name='location'), ))
+            outfile.write(' eb:location=%s' % (self.gds_format_string(quote_attrib(self.location).encode(ExternalEncoding), input_name='location'), ))
     def exportChildren(self, outfile, level, namespace_='eb:', name_='Schema', fromsubclass_=False, pretty_print=True):
         pass
     def exportLiteral(self, outfile, level, name_='Schema'):
@@ -1195,13 +1195,13 @@ class MessageHeader(GeneratedsSuper):
     def exportAttributes(self, outfile, level, already_processed, namespace_='eb:', name_='MessageHeader'):
         if self.mustUnderstand is not None and 'mustUnderstand' not in already_processed:
             already_processed.add('mustUnderstand')
-            outfile.write(' mustUnderstand=%s' % (self.gds_format_string(quote_attrib(self.mustUnderstand).encode(ExternalEncoding), input_name='mustUnderstand'), ))
+            outfile.write(' SOAP-ENV:mustUnderstand=%s' % (self.gds_format_string(quote_attrib(self.mustUnderstand).encode(ExternalEncoding), input_name='mustUnderstand'), ))
         if self.version is not None and 'version' not in already_processed:
             already_processed.add('version')
-            outfile.write(' version=%s' % (self.gds_format_string(quote_attrib(self.version).encode(ExternalEncoding), input_name='version'), ))
+            outfile.write(' eb:version=%s' % (self.gds_format_string(quote_attrib(self.version).encode(ExternalEncoding), input_name='version'), ))
         if self.id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
+            outfile.write(' eb:id=%s' % (self.gds_format_string(quote_attrib(self.id).encode(ExternalEncoding), input_name='id'), ))
     def exportChildren(self, outfile, level, namespace_='eb:', name_='MessageHeader', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
