@@ -21,7 +21,7 @@
 
 import sys
 
-import finvoice as supermod
+import finvoice.sender.senderinfo as supermod
 
 etree_ = None
 Verbose_import_ = False

@@ -112,7 +112,6 @@ import datetime, time
 reload( sys )
 
 sys.setdefaultencoding( 'iso8859-15' )
-sys.path.append( './' )
 
 from finvoice.sender.senderinfo import ExternalEncoding
 from finvoice.sender.senderinfo import FinvoiceSenderInfo
