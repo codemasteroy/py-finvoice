@@ -277,7 +277,7 @@ for (i, _recepient) in enumerate(_recepients):
 	messageHeader.set_Service( Service( None, "Routing" ) )
 	messageHeader.set_Action( "ProcessInvoice" )
 
-	msgData = MessageData( '{0}/{1}'.format(_messageId, i), _nowS )
+	msgData = MessageData( '{0}/{1}'.format(_messageId, i+1), _nowS )
 
 	messageHeader.set_MessageData( msgData )
 
