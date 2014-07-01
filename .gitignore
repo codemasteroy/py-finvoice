@@ -54,4 +54,4 @@ docs/_build/
 
 # Mohanjith
 tmp/
-moha.py
+moha*.py
