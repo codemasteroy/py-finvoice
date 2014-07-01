@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 
+###
+# Copyright 2014 Code Master Oy (http://www.codemaster.fi/)
 #
-# Generated Mon Jun 30 15:14:35 2014 by generateDS.py version 2.12e.
+# This file is part of py-finvoice.
 #
-# Command line options:
-#   ('-o', 'finvoice/sender/senderinfo.py')
-#   ('-s', 'finvoice/sender/senderinfosubs.py')
-#   ('--external-encoding', 'ISO-8859-15')
+# py-finvoice is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# py-finvoice is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# Command line arguments:
-#   xsd/FinvoiceSenderInfo.xsd
-#
-# Command line:
-#   /usr/local/bin/generateDS.py -o "finvoice/sender/senderinfo.py" -s "finvoice/sender/senderinfosubs.py" --external-encoding="ISO-8859-15" xsd/FinvoiceSenderInfo.xsd
-#
-# Current working directory (os.getcwd()):
-#   py-finvoice
-#
+# You should have received a copy of the GNU General Public License
+# along with py-finvoice. If not, see <http://www.gnu.org/licenses/>.
+##
 
 import sys
 
-import ??? as supermod
+import finvoice as supermod
 
 etree_ = None
 Verbose_import_ = False

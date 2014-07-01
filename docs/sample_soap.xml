@@ -1,0 +1,45 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+xmlns:eb="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ envelope.xsd">
+	<SOAP-ENV:Header>
+		<eb:MessageHeader xmlns:eb="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd msg-header-2_0.xsd"
+		SOAP-ENV:mustUnderstand="1" eb:version="2.0">
+			<eb:From>
+				<eb:PartyId>FI9956789012345678</eb:PartyId>
+				<eb:Role>Sender</eb:Role>
+			</eb:From>
+			<eb:From>
+				<eb:PartyId>OKOYFIHH</eb:PartyId>
+				<eb:Role>Intermediator</eb:Role>
+			</eb:From>
+			<eb:To>
+				<eb:PartyId>PROPOSAL</eb:PartyId>
+				<eb:Role>Receiver</eb:Role>
+			</eb:To>
+			<eb:To>
+				<eb:PartyId>OKOYFIHH</eb:PartyId>
+				<eb:Role>Intermediator</eb:Role>
+			</eb:To>
+			<eb:CPAId>yoursandmycpa</eb:CPAId>
+			<!--<eb:ConversationId>cannot_be_empty</eb:ConversationId>-->
+			<eb:Service>Routing</eb:Service>
+			<eb:Action>ProcessInvoice</eb:Action>
+			<eb:MessageData>
+				<eb:MessageId>RP_20120831/1</eb:MessageId>
+				<eb:Timestamp>2012-08-31T12:40:57+02:00</eb:Timestamp>
+				<!--<eb:RefToMessageId>cannot_be_empty</eb:RefToMessageId>-->
+			</eb:MessageData>
+		</eb:MessageHeader>
+	</SOAP-ENV:Header>
+	<SOAP-ENV:Body>
+		<eb:Manifest eb:id="Manifest" eb:version="2.0">
+			<eb:Reference eb:id="ReceiverProposal" xlink:href="RP_20120831">
+				<eb:Schema eb:location="http://www.fkl.fi/verkkolasku/yrityksen_verkkolasku/ladattavat/Tekniset%20tiedostot/ilmoittamispalvelu/ReceiverProposal.xsd" eb:version="2.0"/>
+			</eb:Reference>
+		</eb:Manifest>
+	</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
