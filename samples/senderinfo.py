@@ -2,11 +2,12 @@
 # -*- coding: iso8859-15 -*-
 
 import sys
-import datetime
+import datetime, time
 
 reload(sys)
 
 sys.setdefaultencoding("iso8859-15")
+sys.path.append( './' )
 
 from finvoice.sender.senderinfo import ExternalEncoding
 from finvoice.sender.senderinfo import FinvoiceSenderInfo
@@ -24,8 +25,11 @@ from finvoice.sender.senderinfo import SellerInvoiceTypeTextType
 from finvoice.sender.senderinfo import SellerInvoiceIdentifierTextType
 from finvoice.sender.senderinfo import date
 
+from finvoice.soap.envelope import Envelope, Header, Body
+from finvoice.soap.msgheader import MessageHeader, From, To, PartyId, Service, MessageData
+
 # Date
-nowDate = date( "CCYYMMDD", datetime.datetime.now().date().strftime("%Y%m%d") )
+nowDate = date( "CCYYMMDD", datetime.datetime.today().date().strftime("%Y%m%d") )
 
 # Seller Postal Address
 # SellerStreetName=None, SellerTownName=None, SellerPostCodeIdentifier=None, CountryCode=None, CountryName=None, SellerPostOfficeBoxIdentifier=None
@@ -50,9 +54,11 @@ sellerAccountDetailsNDEAFIHH = SellerAccountDetailsType( SellerAccountIDType( "I
 # SellerAccountDetails=None, SellerInvoiceDetails=None, ProposedDueDateAccepted=None, ProposedInvoicePeriodAccepted=None
 senderInfo = FinvoiceSenderInfo( "2.0" )
 
+_messageId = "001"
+
 # Message Details
 # MessageTypeCode=None, MessageTypeText=None, MessageActionCode=None, MessageActionCodeIdentifier=None, MessageDate=None, SenderInfoIdentifier=None
-senderInfo.set_MessageDetails( MessageDetailsType( "SENDERINFO", "Sender information", "ADD", "00", nowDate, "001" ) )
+senderInfo.set_MessageDetails( MessageDetailsType( "SENDERINFO", "Sender information", "ADD", "00", nowDate, _messageId ) )
 
 # Seller Party Details
 # SellerPartyIdentifier=None, SellerOrganisationNames=None, SellerOrganisationBankName=None, SellerPostalAddressDetails=None, IndustryCode=None
@@ -97,7 +103,50 @@ senderInfo.set_SellerInvoiceDetails( sellerInvoiceDetails )
 senderInfo.set_ProposedDueDateAccepted( "NO" )
 senderInfo.set_ProposedInvoicePeriodAccepted( "YES" )
 
+# Header=None, Body=None
+envelope = Envelope(  )
+
+# mustUnderstand=None, version=None, From=None, To=None, CPAId=None, ConversationId=None, Service=None, Action=None, MessageData=None
+messageHeader = MessageHeader( 1, "2.0" )
+
+header = Header( )
+header.add_anytypeobjs_( messageHeader )
+
+# PartyId=None, Role=None
+msgFrom = From( None, "Sender" )
+msgFrom.add_PartyId( PartyId( None, "00371999207" ) )
+
+msgFromI = From( None, "Intermediator" )
+msgFromI.add_PartyId( PartyId( None, "OKOYFIHH" ) )
+
+messageHeader.add_anytypeobjs_( msgFrom )
+messageHeader.add_anytypeobjs_( msgFromI )
+
+msgTo = To( None, "Receiver" )
+msgTo.add_PartyId( PartyId( None, "SENDERINFO" ) )
+
+msgToI = To( None, "Intermediator" )
+msgToI.add_PartyId( PartyId( None, "OKOYFIHH" ) )
+
+messageHeader.add_anytypeobjs_( msgTo )
+messageHeader.add_anytypeobjs_( msgToI )
+
+messageHeader.set_CPAId( "yoursandmycpa" )
+
+messageHeader.set_Service( Service( None, "Routing" ) )
+messageHeader.set_Action( "ProcessInvoice" )
+
+msgData = MessageData( _messageId, datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z") )
+
+messageHeader.set_MessageData( msgData )
+
+# messageHeader.export( sys.stdout, 0, namespace_='eb:', name_='MessageHeader', namespacedef_='xmlns:eb="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd msg-header-2_0.xsd"', pretty_print=True )
+
+envelope.set_Header( header )
+
+envelope.export( sys.stdout, 0, pretty_print=True )
+
 encodingHeader = '<?xml version="1.0" encoding="' + ExternalEncoding + '" ?>\n'
-sys.stdout.write( encodingHeader )
-sys.stdout.write( '<?xml-stylesheet type="text/xsl" href="FinvoiceSenderInfo.xsl"?>\n' )
-senderInfo.export( sys.stdout, 0, name_='FinvoiceSenderInfo', namespacedef_='xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FinvoiceSenderInfo.xsd"', pretty_print=True )
+#sys.stdout.write( encodingHeader )
+#sys.stdout.write( '<?xml-stylesheet type="text/xsl" href="FinvoiceSenderInfo.xsl"?>\n' )
+#senderInfo.export( sys.stdout, 0, name_='FinvoiceSenderInfo', namespacedef_='xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FinvoiceSenderInfo.xsd"', pretty_print=True )
