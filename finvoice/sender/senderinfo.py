@@ -10,7 +10,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # py-finvoice is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -391,7 +391,7 @@ except ImportError, exp:
 # Globals
 #
 
-ExternalEncoding = 'ISO-8859-15'
+ExternalEncoding = 'iso8859-15'
 Tag_pattern_ = re_.compile(r'({.*})?(.*)')
 String_cleanup_pat_ = re_.compile(r"[\n\r\s]+")
 Namespace_extract_pat_ = re_.compile(r'{(.*)}(.*)')
@@ -479,6 +479,7 @@ def find_attr_value_(attr_name, node):
 class GDSParseError(Exception):
     pass
 
+
 def raise_parse_error(node, msg):
     if XMLParser_import_library == XMLParser_import_lxml:
         msg = '%s (element %s/line %d)' % (
@@ -487,13 +488,10 @@ def raise_parse_error(node, msg):
         msg = '%s (element %s)' % (msg, node.tag, )
     raise GDSParseError(msg)
 
-
-class GDSValueError(Exception):
-    pass
-
 def raise_value_error(value, msg):
-    msg = '%s (got "%s")' % (msg, value, )
-    raise GDSValueError(msg)
+    msg = '%s (element %s)' % (msg, value, )
+    raise GDSParseError(msg)
+
 
 class MixedContainer:
     # Constants for category:
@@ -682,26 +680,16 @@ class FinvoiceSenderInfo(GeneratedsSuper):
     def set_Version(self, Version): self.Version = Version
     def validate_genericStringType5_35(self, value):
         # Validate type genericStringType5_35, a restriction on xs:string.
-        if ( 5 <= value.__len__() <= 35 ):
+        if ( isinstance( value, basestring ) and 5 <= value.__len__() <= 35 ):
             pass
         else:
-            raise_parse_error( value.__len__(), 'Expected value between 5..35 characters' )
+            raise_value_error( value, 'Expected value between 5..35 characters' )
         return value
     def validate_YesNoType(self, value):
         # Validate type YesNoType, a restriction on xs:NMTOKEN.
-        if ( value != "YES" and value != "NO" ):
-            raise_parse_error( value, 'Expected "YES" or "NO"' )
-        return value
-    def validate_genericStringValue5_35(self, value):
-        if ( 5 <= value.__len__() <= 35 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected value between 5..35 characters' )
-        return value
-    def validate_YesNoValue(self, value):
-        if ( value != "YES" and value != "NO" ):
-            raise_value_error( value, 'Expected "YES" or "NO"' )
-        return value
+		if ( value != "YES" and value != "NO" ):
+			raise_value_error( value, 'Expected "YES" or "NO"' )
+		return value
     def hasContent_(self):
         if (
             self.MessageDetails is not None or
@@ -748,7 +736,6 @@ class FinvoiceSenderInfo(GeneratedsSuper):
         if self.SellerPartyDetails is not None:
             self.SellerPartyDetails.export(outfile, level, namespace_, name_='SellerPartyDetails', pretty_print=pretty_print)
         if self.SellerOrganisationUnitNumber is not None:
-            self.validate_genericStringValue5_35(self.SellerOrganisationUnitNumber)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sSellerOrganisationUnitNumber>%s</%sSellerOrganisationUnitNumber>%s' % (namespace_, self.gds_format_string(quote_xml(self.SellerOrganisationUnitNumber).encode(ExternalEncoding), input_name='SellerOrganisationUnitNumber'), namespace_, eol_))
         if self.InvoiceSenderInformationDetails is not None:
@@ -758,11 +745,9 @@ class FinvoiceSenderInfo(GeneratedsSuper):
         if self.SellerInvoiceDetails is not None:
             self.SellerInvoiceDetails.export(outfile, level, namespace_, name_='SellerInvoiceDetails', pretty_print=pretty_print)
         if self.ProposedDueDateAccepted is not None:
-            self.validate_YesNoValue(self.ProposedDueDateAccepted)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sProposedDueDateAccepted>%s</%sProposedDueDateAccepted>%s' % (namespace_, self.gds_format_string(quote_xml(self.ProposedDueDateAccepted).encode(ExternalEncoding), input_name='ProposedDueDateAccepted'), namespace_, eol_))
         if self.ProposedInvoicePeriodAccepted is not None:
-            self.validate_YesNoValue(self.ProposedInvoicePeriodAccepted)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sProposedInvoicePeriodAccepted>%s</%sProposedInvoicePeriodAccepted>%s' % (namespace_, self.gds_format_string(quote_xml(self.ProposedInvoicePeriodAccepted).encode(ExternalEncoding), input_name='ProposedInvoicePeriodAccepted'), namespace_, eol_))
     def exportLiteral(self, outfile, level, name_='FinvoiceSenderInfo'):
@@ -790,7 +775,6 @@ class FinvoiceSenderInfo(GeneratedsSuper):
             showIndent(outfile, level)
             outfile.write('),\n')
         if self.SellerOrganisationUnitNumber is not None:
-            self.validate_genericStringValue5_35(self.SellerOrganisationUnitNumber)
             showIndent(outfile, level)
             outfile.write('SellerOrganisationUnitNumber=%s,\n' % quote_python(self.SellerOrganisationUnitNumber).encode(ExternalEncoding))
         if self.InvoiceSenderInformationDetails is not None:
@@ -818,11 +802,9 @@ class FinvoiceSenderInfo(GeneratedsSuper):
             showIndent(outfile, level)
             outfile.write('),\n')
         if self.ProposedDueDateAccepted is not None:
-            self.validate_YesNoValue(self.ProposedDueDateAccepted)
             showIndent(outfile, level)
             outfile.write('ProposedDueDateAccepted=%s,\n' % quote_python(self.ProposedDueDateAccepted).encode(ExternalEncoding))
         if self.ProposedInvoicePeriodAccepted is not None:
-            self.validate_YesNoValue(self.ProposedInvoicePeriodAccepted)
             showIndent(outfile, level)
             outfile.write('ProposedInvoicePeriodAccepted=%s,\n' % quote_python(self.ProposedInvoicePeriodAccepted).encode(ExternalEncoding))
     def build(self, node):
@@ -912,59 +894,31 @@ class InvoiceSenderInformationDetailsType(GeneratedsSuper):
     def set_NewInvoiceSenderIntermediatorAddress(self, NewInvoiceSenderIntermediatorAddress): self.NewInvoiceSenderIntermediatorAddress = NewInvoiceSenderIntermediatorAddress
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 70 ):
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 70 ):
             pass
         else:
-            raise_parse_error( value.__len__(), 'Expected value between 0..70 characters' )
+            raise_value_error( value, 'Expected value between 0..70 characters' )
         return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 512 ):
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 512 ):
             pass
         else:
-            raise_parse_error( value.__len__(), 'Expected value between 0..512 characters' )
+            raise_value_error( value, 'Expected value between 0..512 characters' )
         return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 35 ):
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
             pass
         else:
-            raise_parse_error( value.__len__(), 'Expected value between 0..35 characters' )
+            raise_value_error( value, 'Expected value between 0..35 characters' )
         return value
     def validate_genericNMtokenType8_11(self, value):
         # Validate type genericNMtokenType8_11, a restriction on genericNMtokenType.
-        if ( 8 <= value.__len__() <= 11 ):
+        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
             pass
         else:
-            raise_parse_error( value.__len__(), 'Expected value between 8..11 characters' )
-        return value
-    def validate_genericStringValue0_70(self, value):
-        # Validate type genericStringType0_70, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 70 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected value between 0..70 characters' )
-        return value
-    def validate_genericStringValue0_512(self, value):
-        # Validate type genericStringType0_512, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 512 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected value between 0..512 characters' )
-        return value
-    def validate_genericStringValue0_35(self, value):
-        # Validate type genericStringType0_35, a restriction on xs:string.
-        if ( 0 <= value.__len__() <= 35 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected value between 0..35 characters' )
-        return value
-    def validate_genericNMtokenValue8_11(self, value):
-        # Validate type genericNMtokenType8_11, a restriction on genericNMtokenType.
-        if ( 8 <= value.__len__() <= 11 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected value between 8..11 characters' )
+            raise_value_error( value, 'Expected value between 8..11 characters' )
         return value
     def hasContent_(self):
         if (
@@ -1004,27 +958,21 @@ class InvoiceSenderInformationDetailsType(GeneratedsSuper):
         else:
             eol_ = ''
         if self.SellerWebaddressNameText is not None:
-            self.validate_genericStringValue0_70(self.SellerWebaddressNameText)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sSellerWebaddressNameText>%s</%sSellerWebaddressNameText>%s' % (namespace_, self.gds_format_string(quote_xml(self.SellerWebaddressNameText).encode(ExternalEncoding), input_name='SellerWebaddressNameText'), namespace_, eol_))
         if self.SellerWebaddressText is not None:
-            self.validate_genericStringValue0_512(self.SellerWebaddressText)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sSellerWebaddressText>%s</%sSellerWebaddressText>%s' % (namespace_, self.gds_format_string(quote_xml(self.SellerWebaddressText).encode(ExternalEncoding), input_name='SellerWebaddressText'), namespace_, eol_))
         if self.InvoiceSenderAddress is not None:
-            self.validate_genericStringValue0_35(self.InvoiceSenderAddress)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sInvoiceSenderAddress>%s</%sInvoiceSenderAddress>%s' % (namespace_, self.gds_format_string(quote_xml(self.InvoiceSenderAddress).encode(ExternalEncoding), input_name='InvoiceSenderAddress'), namespace_, eol_))
         if self.InvoiceSenderIntermediatorAddress is not None:
-            self.validate_genericNMtokenValue8_11(self.InvoiceSenderIntermediatorAddress)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sInvoiceSenderIntermediatorAddress>%s</%sInvoiceSenderIntermediatorAddress>%s' % (namespace_, self.gds_format_string(quote_xml(self.InvoiceSenderIntermediatorAddress).encode(ExternalEncoding), input_name='InvoiceSenderIntermediatorAddress'), namespace_, eol_))
         if self.NewInvoiceSenderAddress is not None:
-            self.validate_genericStringValue0_35(self.NewInvoiceSenderAddress)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sNewInvoiceSenderAddress>%s</%sNewInvoiceSenderAddress>%s' % (namespace_, self.gds_format_string(quote_xml(self.NewInvoiceSenderAddress).encode(ExternalEncoding), input_name='NewInvoiceSenderAddress'), namespace_, eol_))
         if self.NewInvoiceSenderIntermediatorAddress is not None:
-            self.validate_genericNMtokenValue8_11(self.NewInvoiceSenderIntermediatorAddress)
             showIndent(outfile, level, pretty_print)
             outfile.write('<%sNewInvoiceSenderIntermediatorAddress>%s</%sNewInvoiceSenderIntermediatorAddress>%s' % (namespace_, self.gds_format_string(quote_xml(self.NewInvoiceSenderIntermediatorAddress).encode(ExternalEncoding), input_name='NewInvoiceSenderIntermediatorAddress'), namespace_, eol_))
     def exportLiteral(self, outfile, level, name_='InvoiceSenderInformationDetailsType'):
@@ -1037,27 +985,21 @@ class InvoiceSenderInformationDetailsType(GeneratedsSuper):
         pass
     def exportLiteralChildren(self, outfile, level, name_):
         if self.SellerWebaddressNameText is not None:
-            self.validate_genericStringValue0_70(self.SellerWebaddressNameText)
             showIndent(outfile, level)
             outfile.write('SellerWebaddressNameText=%s,\n' % quote_python(self.SellerWebaddressNameText).encode(ExternalEncoding))
         if self.SellerWebaddressText is not None:
-            self.validate_genericStringValue0_512(self.SellerWebaddressText)
             showIndent(outfile, level)
             outfile.write('SellerWebaddressText=%s,\n' % quote_python(self.SellerWebaddressText).encode(ExternalEncoding))
         if self.InvoiceSenderAddress is not None:
-            self.validate_genericStringValue0_35(self.InvoiceSenderAddress)
             showIndent(outfile, level)
             outfile.write('InvoiceSenderAddress=%s,\n' % quote_python(self.InvoiceSenderAddress).encode(ExternalEncoding))
         if self.InvoiceSenderIntermediatorAddress is not None:
-            self.validate_genericNMtokenValue8_11(self.InvoiceSenderIntermediatorAddress)
             showIndent(outfile, level)
             outfile.write('InvoiceSenderIntermediatorAddress=%s,\n' % quote_python(self.InvoiceSenderIntermediatorAddress).encode(ExternalEncoding))
         if self.NewInvoiceSenderAddress is not None:
-            self.validate_genericStringValue0_35(self.NewInvoiceSenderAddress)
             showIndent(outfile, level)
             outfile.write('NewInvoiceSenderAddress=%s,\n' % quote_python(self.NewInvoiceSenderAddress).encode(ExternalEncoding))
         if self.NewInvoiceSenderIntermediatorAddress is not None:
-            self.validate_genericNMtokenValue8_11(self.NewInvoiceSenderIntermediatorAddress)
             showIndent(outfile, level)
             outfile.write('NewInvoiceSenderIntermediatorAddress=%s,\n' % quote_python(self.NewInvoiceSenderIntermediatorAddress).encode(ExternalEncoding))
     def build(self, node):
@@ -1136,16 +1078,34 @@ class MessageDetailsType(GeneratedsSuper):
     def set_SenderInfoIdentifier(self, SenderInfoIdentifier): self.SenderInfoIdentifier = SenderInfoIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 0..35 characters' )
+        return value
     def validate_MessageActionCodeType(self, value):
         # Validate type MessageActionCodeType, a restriction on xs:string.
-        pass
+        actions = [ 'ADD', 'CHANGE', 'DELETE' ]
+        if ( value in actions ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ' + ' or '.join( actions ) )
+        return value
     def validate_MessageActionCodeIdentifierType(self, value):
         # Validate type MessageActionCodeIdentifierType, a restriction on xs:NMTOKEN.
-        pass
+        identifiers = [ '00', '02' ]
+        if ( value in identifiers ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "00" or "02"' + ' or '.join( identifiers ) )
+        return value
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..48 characters' )
+        return value
     def hasContent_(self):
         if (
             self.MessageTypeCode is not None or
@@ -1628,13 +1588,26 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
     def set_SellerServiceCode(self, SellerServiceCode): self.SellerServiceCode = SellerServiceCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..35 characters' )
+        return value
     def validate_SellerServiceCodeType(self, value):
         # Validate type SellerServiceCodeType, a restriction on xs:NMTOKEN.
-        pass
+        codes = [ '00', '01', '02' ]
+        if ( value in codes ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ' + ' or '.join( codes ) )
+        return value
     def hasContent_(self):
         if (
             self.SellerDirectDebitIdentifier is not None or
@@ -1804,13 +1777,25 @@ class SellerPartyDetailsType(GeneratedsSuper):
     def set_IndustryCode(self, IndustryCode): self.IndustryCode = IndustryCode
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..48 characters' )
+        return value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..35 characters' )
+        return value
     def validate_genericStringType0_6(self, value):
         # Validate type genericStringType0_6, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 6 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 0..6 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerPartyIdentifier is not None or
@@ -1965,10 +1950,22 @@ class SellerOrganisationNamesType(GeneratedsSuper):
     def set_LanguageCode(self, LanguageCode): self.LanguageCode = LanguageCode
     def validate_genericStringType2_70(self, value):
         # Validate type genericStringType2_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 2 <= value.__len__() <= 70 ):
+            pass
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..70 characters' )
+        return value
     def validate_LanguageCodeType(self, value):
         # Validate type LanguageCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 and value in [ 'FI', 'SV', 'EN' ]):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 639-1' )
+        return value
     def hasContent_(self):
         if (
             self.SellerOrganisationName
@@ -2080,13 +2077,25 @@ class SellerPostalAddressDetailsType(GeneratedsSuper):
     def set_SellerPostOfficeBoxIdentifier(self, SellerPostOfficeBoxIdentifier): self.SellerPostOfficeBoxIdentifier = SellerPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 2 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 2..35 characters' )
+        return value
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..48 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def hasContent_(self):
         if (
             self.SellerStreetName is not None or
@@ -2315,7 +2324,11 @@ class TextLanguageOptional(GeneratedsSuper):
     def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
     def validate_LanguageCodeType(self, value):
         # Validate type LanguageCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 and value in [ 'FI', 'SV', 'EN' ]):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 639-1' )
+        return value
     def hasContent_(self):
         if (
             self.valueOf_
@@ -2411,7 +2424,11 @@ class TextLanguageRequired(GeneratedsSuper):
     def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
     def validate_LanguageCodeType(self, value):
         # Validate type LanguageCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 and value in [ 'FI', 'SV', 'EN' ]):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 639-1' )
+        return value
     def hasContent_(self):
         if (
             self.valueOf_
@@ -2980,10 +2997,6 @@ class SellerInvoiceTypeTextType(TextLanguageRequired):
     factory = staticmethod(factory)
     def get_valueOf_(self): return self.valueOf_
     def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
-    def validate_valueOf_value(self, value):
-        if ( value.__len__() > 35 ):
-            raise_value_error( value.__len__(), 'Expected value less than 35 characters' )
-        return value
     def hasContent_(self):
         if (
             self.valueOf_ or
@@ -2999,7 +3012,6 @@ class SellerInvoiceTypeTextType(TextLanguageRequired):
             eol_ = ''
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
-        self.validate_valueOf_value(self.valueOf_) # validate valueOf_ 
         showIndent(outfile, level, pretty_print)
         outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
@@ -3079,7 +3091,12 @@ class SellerInvoiceIdentifierTextType(TextLanguageRequired):
     def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
     def validate_SellerInvoiceIdentifierTypeCode(self, value):
         # Validate type SellerInvoiceIdentifierTypeCode, a restriction on xs:NMTOKEN.
-        pass
+        identifiers = [ '01', '02', '03', '04', '05', '06', '07', '08', '09','99' ]
+        if ( value in identifiers ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ' + ' or '.join( identifiers ) )
+        return value
     def hasContent_(self):
         if (
             self.valueOf_ or

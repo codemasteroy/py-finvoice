@@ -55,3 +55,6 @@ docs/_build/
 # Mohanjith
 tmp/
 moha*.py
+
+# Submlime
+*.sublime-*

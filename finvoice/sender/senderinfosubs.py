@@ -9,7 +9,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # py-finvoice is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -82,7 +82,7 @@ def parsexml_(*args, **kwargs):
 # Globals
 #
 
-ExternalEncoding = 'ISO-8859-15'
+ExternalEncoding = 'iso8859-15'
 
 #
 # Data representation classes
@@ -327,8 +327,8 @@ def parseLiteral(inFilename, silence=False):
     # Enable Python to collect the space used by the DOM.
     doc = None
     if not silence:
-        sys.stdout.write('#from ??? import *\n\n')
-        sys.stdout.write('import ??? as model_\n\n')
+        sys.stdout.write('#from finvoice.sender.senderinfo import *\n\n')
+        sys.stdout.write('import finvoice.sender.senderinfo as model_\n\n')
         sys.stdout.write('rootObj = model_.rootClass(\n')
         rootObj.exportLiteral(sys.stdout, 0, name_=rootTag)
         sys.stdout.write(')\n')
