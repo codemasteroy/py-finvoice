@@ -20,6 +20,9 @@
 # along with py-finvoice. If not, see <http://www.gnu.org/licenses/>.
 ##
 
+# Command line:
+#   /usr/local/bin/generateDS.py -s "finvoice/sender/senderinfosubs.py" -o "finvoice/sender/senderinfo.py" --super="finvoice.sender.senderinfo" --external-encoding="iso8859-15" --no-dates --no-versions --validator-bodies="stubs/validator/sender/senderinfo/" --user-methods="generators.gends_user_methods_senderinfo" xsd/FinvoiceSenderInfo.xsd
+
 import sys
 import getopt
 import re as re_
@@ -1490,6 +1493,37 @@ class SellerAccountIDType(GeneratedsSuper):
             self.extensiontype_ = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected less than 35 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "IBAN" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "IBAN"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerAccountIDType
 
 
@@ -1586,6 +1620,37 @@ class SellerBicType(GeneratedsSuper):
             self.extensiontype_ = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 8..11 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "BIC" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "BIC"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerBicType
 
 
@@ -1771,6 +1836,39 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
             obj_ = SellerInstructionFreeTextType.factory()
             obj_.build(child_)
             self.SellerInstructionFreeText.append(obj_)
+            obj_.original_tagname_ = 'SellerInstructionFreeText'
+        elif nodeName_ == 'SellerInvoiceTypeDetails':
+            obj_ = SellerInvoiceTypeDetailsType.factory()
+            obj_.build(child_)
+            self.SellerInvoiceTypeDetails.append(obj_)
+            obj_.original_tagname_ = 'SellerInvoiceTypeDetails'
+        elif nodeName_ == 'SellerServiceCode':
+            SellerServiceCode_ = child_.text
+            SellerServiceCode_ = self.gds_validate_string(SellerServiceCode_, node, 'SellerServiceCode')
+            self.SellerServiceCode = SellerServiceCode_
+            self.validate_SellerServiceCodeType(self.SellerServiceCode)    # validate type SellerServiceCodeType
+    def validate_SellerInstructionFreeTextType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerDirectDebitIdentifier':
+            SellerDirectDebitIdentifier_ = child_.text
+            SellerDirectDebitIdentifier_ = self.gds_validate_string(SellerDirectDebitIdentifier_, node, 'SellerDirectDebitIdentifier')
+            self.SellerDirectDebitIdentifier = SellerDirectDebitIdentifier_
+            self.validate_genericStringType0_35(self.SellerDirectDebitIdentifier)    # validate type genericStringType0_35
+        elif nodeName_ == 'PaymentInstructionIdentifier':
+            PaymentInstructionIdentifier_ = child_.text
+            PaymentInstructionIdentifier_ = self.gds_validate_string(PaymentInstructionIdentifier_, node, 'PaymentInstructionIdentifier')
+            self.PaymentInstructionIdentifier = PaymentInstructionIdentifier_
+            self.validate_genericStringType1_35(self.PaymentInstructionIdentifier)    # validate type genericStringType1_35
+        elif nodeName_ == 'SellerInstructionFreeText':
+            obj_ = SellerInstructionFreeTextType.factory()
+            obj_.build(child_)
+            self.SellerInstructionFreeText.append(obj_)
+            self.validate_SellerInstructionFreeTextType(self.SellerInstructionFreeText)
             obj_.original_tagname_ = 'SellerInstructionFreeText'
         elif nodeName_ == 'SellerInvoiceTypeDetails':
             obj_ = SellerInvoiceTypeDetailsType.factory()
@@ -2370,6 +2468,34 @@ class date(GeneratedsSuper):
             self.Format = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        import datetime
+        if ( datetime.datetime.strptime( value, '%Y%m%d' ).strftime( '%Y%m%d' ) == value ):
+            pass
+        else:
+            raise_value_error( value, 'Time format does not match' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_Format(self, value):
+        if ( value == "CCYYMMDD" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "CCYYMMDD"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('Format', node)
+        if value is not None and 'Format' not in already_processed:
+            already_processed.add('Format')
+            self.Format = value
+            self.validate_Format(self.Format)
 # end class date
 
 
@@ -2655,6 +2781,37 @@ class SellerAccountIDType1(SellerAccountIDType):
         super(SellerAccountIDType1, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected less than 35 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "IBAN" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "IBAN"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerAccountIDType1
 
 
@@ -2732,6 +2889,37 @@ class SellerBicType2(SellerBicType):
         super(SellerBicType2, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 8..11 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "BIC" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "BIC"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerBicType2
 
 
@@ -2963,6 +3151,21 @@ class SellerInstructionFreeTextType(TextLanguageOptional):
         super(SellerInstructionFreeTextType, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 420 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 1..420 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
 # end class SellerInstructionFreeTextType
 
 
@@ -3077,6 +3280,24 @@ class SellerInvoiceTypeDetailsType(GeneratedsSuper):
             obj_.build(child_)
             self.SellerInvoiceIdentifierText.append(obj_)
             obj_.original_tagname_ = 'SellerInvoiceIdentifierText'
+    def validate_SellerInvoiceIdentifierTextType3(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected maximum of 2 elements' )
+        return value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerInvoiceTypeText':
+            obj_ = SellerInvoiceTypeTextType.factory()
+            obj_.build(child_)
+            self.SellerInvoiceTypeText = obj_
+            obj_.original_tagname_ = 'SellerInvoiceTypeText'
+        elif nodeName_ == 'SellerInvoiceIdentifierText':
+            obj_ = SellerInvoiceIdentifierTextType3.factory()
+            obj_.build(child_)
+            self.SellerInvoiceIdentifierText.append(obj_)
+            self.validate_SellerInvoiceIdentifierTextType3(self.SellerInvoiceIdentifierText);
+            obj_.original_tagname_ = 'SellerInvoiceIdentifierText'
 # end class SellerInvoiceTypeDetailsType
 
 
@@ -3154,21 +3375,6 @@ class SellerInvoiceTypeTextType(TextLanguageRequired):
         super(SellerInvoiceTypeTextType, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-    def validate_valueOf_(self, value):
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
-            pass
-        else:
-            raise_value_error( value, 'Expected value between 0..35 characters' )
-        return value
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        self.valueOf_ = get_all_text_(node)
-        self.validate_valueOf_(self.valueOf_)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
 # end class SellerInvoiceTypeTextType
 
 
@@ -3434,6 +3640,21 @@ class SellerInvoiceIdentifierTextType3(SellerInvoiceIdentifierTextType):
         super(SellerInvoiceIdentifierTextType3, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 4 <= value.__len__() <= 70 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 4..70 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
 # end class SellerInvoiceIdentifierTextType3
 
 
