@@ -635,6 +635,17 @@ def _cast(typ, value):
 
 
 class FinvoiceSenderInfo(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('Version', 'xs:NMTOKEN', 0),
+        MemberSpec_('MessageDetails', 'MessageDetailsType', 0),
+        MemberSpec_('SellerPartyDetails', 'SellerPartyDetailsType', 0),
+        MemberSpec_('SellerOrganisationUnitNumber', ['genericStringType5_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceSenderInformationDetails', 'InvoiceSenderInformationDetailsType', 0),
+        MemberSpec_('SellerAccountDetails', 'SellerAccountDetailsType', 1),
+        MemberSpec_('SellerInvoiceDetails', 'SellerInvoiceDetailsType', 0),
+        MemberSpec_('ProposedDueDateAccepted', ['YesNoType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('ProposedInvoicePeriodAccepted', ['YesNoType', 'xs:NMTOKEN'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, Version=None, MessageDetails=None, SellerPartyDetails=None, SellerOrganisationUnitNumber=None, InvoiceSenderInformationDetails=None, SellerAccountDetails=None, SellerInvoiceDetails=None, ProposedDueDateAccepted=None, ProposedInvoicePeriodAccepted=None):
@@ -864,6 +875,14 @@ class FinvoiceSenderInfo(GeneratedsSuper):
 
 
 class InvoiceSenderInformationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerWebaddressNameText', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('SellerWebaddressText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('InvoiceSenderAddress', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceSenderIntermediatorAddress', ['genericNMtokenType8_11', 'genericNMtokenType', 'xs:token'], 0),
+        MemberSpec_('NewInvoiceSenderAddress', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('NewInvoiceSenderIntermediatorAddress', ['genericNMtokenType8_11', 'genericNMtokenType', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerWebaddressNameText=None, SellerWebaddressText=None, InvoiceSenderAddress=None, InvoiceSenderIntermediatorAddress=None, NewInvoiceSenderAddress=None, NewInvoiceSenderIntermediatorAddress=None):
@@ -1048,6 +1067,14 @@ class InvoiceSenderInformationDetailsType(GeneratedsSuper):
 
 
 class MessageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('MessageTypeCode', 'xs:string', 0),
+        MemberSpec_('MessageTypeText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('MessageActionCode', ['MessageActionCodeType', 'xs:string'], 0),
+        MemberSpec_('MessageActionCodeIdentifier', ['MessageActionCodeIdentifierType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('MessageDate', 'date', 0),
+        MemberSpec_('SenderInfoIdentifier', ['genericStringType1_48', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, MessageTypeCode=None, MessageTypeText=None, MessageActionCode=None, MessageActionCodeIdentifier=None, MessageDate=None, SenderInfoIdentifier=None):
@@ -1233,6 +1260,12 @@ class MessageDetailsType(GeneratedsSuper):
 
 
 class SellerAccountDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerAccountID', 'SellerAccountIDType1', 0),
+        MemberSpec_('SellerBic', 'SellerBicType2', 0),
+        MemberSpec_('NewSellerAccountID', 'NewSellerAccountIDType', 0),
+        MemberSpec_('NewSellerBic', 'NewSellerBicType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerAccountID=None, SellerBic=None, NewSellerAccountID=None, NewSellerBic=None):
@@ -1365,6 +1398,10 @@ class SellerAccountDetailsType(GeneratedsSuper):
 
 
 class SellerAccountIDType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:string', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None, extensiontype_=None):
@@ -1457,6 +1494,10 @@ class SellerAccountIDType(GeneratedsSuper):
 
 
 class SellerBicType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:string', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None, extensiontype_=None):
@@ -1549,6 +1590,13 @@ class SellerBicType(GeneratedsSuper):
 
 
 class SellerInvoiceDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerDirectDebitIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('PaymentInstructionIdentifier', ['genericStringType1_35', 'xs:string'], 0),
+        MemberSpec_('SellerInstructionFreeText', 'SellerInstructionFreeTextType', 1),
+        MemberSpec_('SellerInvoiceTypeDetails', 'SellerInvoiceTypeDetailsType', 1),
+        MemberSpec_('SellerServiceCode', ['SellerServiceCodeType', 'xs:NMTOKEN'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerDirectDebitIdentifier=None, PaymentInstructionIdentifier=None, SellerInstructionFreeText=None, SellerInvoiceTypeDetails=None, SellerServiceCode=None):
@@ -1738,6 +1786,13 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
 
 
 class SellerPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerPartyIdentifier', ['genericStringType1_48', 'xs:string'], 0),
+        MemberSpec_('SellerOrganisationNames', 'SellerOrganisationNamesType', 1),
+        MemberSpec_('SellerOrganisationBankName', ['genericStringType1_35', 'xs:string'], 1),
+        MemberSpec_('SellerPostalAddressDetails', 'SellerPostalAddressDetailsType', 0),
+        MemberSpec_('IndustryCode', ['genericStringType0_6', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerPartyIdentifier=None, SellerOrganisationNames=None, SellerOrganisationBankName=None, SellerPostalAddressDetails=None, IndustryCode=None):
@@ -1926,6 +1981,10 @@ class SellerPartyDetailsType(GeneratedsSuper):
 
 
 class SellerOrganisationNamesType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('LanguageCode', 'LanguageCodeType', 0),
+        MemberSpec_('SellerOrganisationName', ['genericStringType2_70', 'xs:string'], 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, LanguageCode=None, SellerOrganisationName=None):
@@ -2047,6 +2106,14 @@ class SellerOrganisationNamesType(GeneratedsSuper):
 
 
 class SellerPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerStreetName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerPostCodeIdentifier', ['genericStringType1_48', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerPostOfficeBoxIdentifier', ['genericStringType1_48', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerStreetName=None, SellerTownName=None, SellerPostCodeIdentifier=None, CountryCode=None, CountryName=None, SellerPostOfficeBoxIdentifier=None):
@@ -2222,6 +2289,10 @@ class SellerPostalAddressDetailsType(GeneratedsSuper):
 
 
 class date(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('Format', 'xs:string', 0),
+        MemberSpec_('valueOf_', ['dateType', 'xs:integer'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, Format=None, valueOf_=None):
@@ -2303,6 +2374,10 @@ class date(GeneratedsSuper):
 
 
 class TextLanguageOptional(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('LanguageCode', 'LanguageCodeType', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, LanguageCode=None, valueOf_=None, extensiontype_=None):
@@ -2403,6 +2478,10 @@ class TextLanguageOptional(GeneratedsSuper):
 
 
 class TextLanguageRequired(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('LanguageCode', 'LanguageCodeType', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, LanguageCode=None, valueOf_=None, extensiontype_=None):
@@ -2503,6 +2582,9 @@ class TextLanguageRequired(GeneratedsSuper):
 
 
 class SellerAccountIDType1(SellerAccountIDType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'SellerAccountIDType', 0),
+    ]
     subclass = None
     superclass = SellerAccountIDType
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -2577,6 +2659,9 @@ class SellerAccountIDType1(SellerAccountIDType):
 
 
 class SellerBicType2(SellerBicType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'SellerBicType', 0),
+    ]
     subclass = None
     superclass = SellerBicType
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -2651,6 +2736,9 @@ class SellerBicType2(SellerBicType):
 
 
 class NewSellerAccountIDType(SellerAccountIDType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'SellerAccountIDType', 0),
+    ]
     subclass = None
     superclass = SellerAccountIDType
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -2725,6 +2813,9 @@ class NewSellerAccountIDType(SellerAccountIDType):
 
 
 class NewSellerBicType(SellerBicType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'SellerBicType', 0),
+    ]
     subclass = None
     superclass = SellerBicType
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -2799,6 +2890,9 @@ class NewSellerBicType(SellerBicType):
 
 
 class SellerInstructionFreeTextType(TextLanguageOptional):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'TextLanguageOptional', 0),
+    ]
     subclass = None
     superclass = TextLanguageOptional
     def __init__(self, LanguageCode=None, valueOf_=None):
@@ -2873,6 +2967,10 @@ class SellerInstructionFreeTextType(TextLanguageOptional):
 
 
 class SellerInvoiceTypeDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerInvoiceTypeText', 'SellerInvoiceTypeTextType', 0),
+        MemberSpec_('SellerInvoiceIdentifierText', 'SellerInvoiceIdentifierTextType3', 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerInvoiceTypeText=None, SellerInvoiceIdentifierText=None):
@@ -2983,6 +3081,9 @@ class SellerInvoiceTypeDetailsType(GeneratedsSuper):
 
 
 class SellerInvoiceTypeTextType(TextLanguageRequired):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'TextLanguageRequired', 0),
+    ]
     subclass = None
     superclass = TextLanguageRequired
     def __init__(self, LanguageCode=None, valueOf_=None):
@@ -3053,10 +3154,33 @@ class SellerInvoiceTypeTextType(TextLanguageRequired):
         super(SellerInvoiceTypeTextType, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 0..35 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
 # end class SellerInvoiceTypeTextType
 
 
 class SellerInvoiceIdentifierTextType(TextLanguageRequired):
+    member_data_items_ = [
+        MemberSpec_('SellerInvoiceIdentifierType', 'SellerInvoiceIdentifierTypeCode', 0),
+        MemberSpec_('SellerInvoiceIdentifierMinLength', 'xs:integer', 0),
+        MemberSpec_('SellerInvoiceIdentifierHyphens', 'xs:boolean', 0),
+        MemberSpec_('SellerInvoiceIdentifierSpaces', 'xs:boolean', 0),
+        MemberSpec_('SellerInvoiceIdentifierMaxLength', 'xs:integer', 0),
+        MemberSpec_('valueOf_', 'TextLanguageRequired', 0),
+    ]
     subclass = None
     superclass = TextLanguageRequired
     def __init__(self, LanguageCode=None, SellerInvoiceIdentifierType=None, SellerInvoiceIdentifierMinLength=1, SellerInvoiceIdentifierHyphens=False, SellerInvoiceIdentifierSpaces=False, SellerInvoiceIdentifierMaxLength=35, valueOf_=None, extensiontype_=None):
@@ -3237,6 +3361,9 @@ class SellerInvoiceIdentifierTextType(TextLanguageRequired):
 
 
 class SellerInvoiceIdentifierTextType3(SellerInvoiceIdentifierTextType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'SellerInvoiceIdentifierTextType', 0),
+    ]
     subclass = None
     superclass = SellerInvoiceIdentifierTextType
     def __init__(self, LanguageCode=None, SellerInvoiceIdentifierType=None, SellerInvoiceIdentifierMinLength=1, SellerInvoiceIdentifierHyphens=False, SellerInvoiceIdentifierSpaces=False, SellerInvoiceIdentifierMaxLength=35, valueOf_=None):

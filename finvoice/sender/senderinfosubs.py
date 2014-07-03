@@ -19,6 +19,9 @@
 # along with py-finvoice. If not, see <http://www.gnu.org/licenses/>.
 ##
 
+# Command line:
+#   /usr/local/bin/generateDS.py -s "finvoice/sender/senderinfosubs.py" -o "finvoice/sender/senderinfo.py" --super="finvoice.sender.senderinfo" --external-encoding="iso8859-15" --no-dates --no-versions --validator-bodies="stubs/validator/sender/senderinfo/" --user-methods="generators.gends_user_methods_senderinfo" xsd/FinvoiceSenderInfo.xsd
+
 import sys
 
 import finvoice.sender.senderinfo as supermod
