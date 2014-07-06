@@ -492,7 +492,7 @@ def raise_parse_error(node, msg):
     raise GDSParseError(msg)
 
 def raise_value_error(value, msg):
-    msg = '%s (element %s)' % (msg, value, )
+    msg = '%s (value "%s")' % (msg, value, )
     raise GDSParseError(msg)
 
 

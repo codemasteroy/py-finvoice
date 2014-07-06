@@ -415,64 +415,6 @@ method220 = MethodSpec(name='buildAttributes',
     class_names=r'^date$',
     )
 
-method230 = MethodSpec(name='validate_SellerOrganisationNamesType',
-    source='''\
-    def validate_SellerOrganisationNamesType(self, value):
-        if ( value.__len__() <= 3 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
-        return value
-''',
-    class_names=r'^SellerPartyDetailsType$',
-    )
-
-method231 = MethodSpec(name='validate_SellerOrganisationBankName',
-    source='''\
-    def validate_SellerOrganisationBankName(self, value):
-        if ( value.__len__() <= 2 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
-        return value
-''',
-    class_names=r'^SellerPartyDetailsType$',
-    )
-
-method240 = MethodSpec(name='buildChildren',
-    source='''\
-    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'SellerPartyIdentifier':
-            SellerPartyIdentifier_ = child_.text
-            SellerPartyIdentifier_ = self.gds_validate_string(SellerPartyIdentifier_, node, 'SellerPartyIdentifier')
-            self.SellerPartyIdentifier = SellerPartyIdentifier_
-            self.validate_genericStringType1_48(self.SellerPartyIdentifier)    # validate type genericStringType1_48
-        elif nodeName_ == 'SellerOrganisationNames':
-            obj_ = SellerOrganisationNamesType.factory()
-            obj_.build(child_)
-            self.SellerOrganisationNames.append(obj_)
-            self.validate_SellerOrganisationNamesType(self.SellerOrganisationNames)
-            obj_.original_tagname_ = 'SellerOrganisationNames'
-        elif nodeName_ == 'SellerOrganisationBankName':
-            SellerOrganisationBankName_ = child_.text
-            SellerOrganisationBankName_ = self.gds_validate_string(SellerOrganisationBankName_, node, 'SellerOrganisationBankName')
-            self.SellerOrganisationBankName.append(SellerOrganisationBankName_)
-            self.validate_genericStringType1_35(self.SellerOrganisationBankName)    # validate type genericStringType1_35
-            self.validate_SellerOrganisationBankName(self.SellerOrganisationBankName)
-        elif nodeName_ == 'SellerPostalAddressDetails':
-            obj_ = SellerPostalAddressDetailsType.factory()
-            obj_.build(child_)
-            self.SellerPostalAddressDetails = obj_
-            obj_.original_tagname_ = 'SellerPostalAddressDetails'
-        elif nodeName_ == 'IndustryCode':
-            IndustryCode_ = child_.text
-            IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
-            self.IndustryCode = IndustryCode_
-            self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
-''',
-    class_names=r'^SellerPartyDetailsType$',
-    )
-
 method250 = MethodSpec(name='validate_SellerOrganisationName',
     source='''\
     def validate_SellerOrganisationName(self, value):
@@ -503,35 +445,6 @@ method260 = MethodSpec(name='buildChildren',
 #   This list of specifications must be named METHOD_SPECS.
 #
 METHOD_SPECS = (
-    method10,
-    method20,
-    method30,
-    method40,
-    method50,
-    method60,
-    method70,
-    method80,
-    method90,
-    method91,
-    method100,
-    method110,
-    method120,
-    method130,
-    method140,
-    method150,
-    method160,
-    method170,
-    method180,
-    method190,
-    method200,
-    method210,
-    method220,
-    method230,
-    method230,
-    method231,
-    method240,
-    method250,
-    method260,
     )
 
 

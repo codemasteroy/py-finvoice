@@ -272,11 +272,11 @@
 </InvoiceRow>
 <SpecificationDetails>
 <SpecificationFreeText>LASKUN VAPAAMUOTOISET ERITTELYTIEDOT:</SpecificationFreeText>
-<SpecificationFreeText>Sarake-1              Sarake-2                                                             Sarake-3</SpecificationFreeText>
-<SpecificationFreeText>---------------------------------------------------------------------------------------------------</SpecificationFreeText>
-<SpecificationFreeText>1.sarakkeen tieto     2.sarakkeen tieto                                                       10,00</SpecificationFreeText>
-<SpecificationFreeText>Toinen rivi           Toinen rivi                                                          1 000,00</SpecificationFreeText>
-<SpecificationFreeText>Kolmas rivi           3/2                                                                      1,00</SpecificationFreeText>
+<SpecificationFreeText>Sarake-1              Sarake-2                                          Sarake-3</SpecificationFreeText>
+<SpecificationFreeText>--------------------------------------------------------------------------------</SpecificationFreeText>
+<SpecificationFreeText>1.sarakkeen tieto     2.sarakkeen tieto                                    10,00</SpecificationFreeText>
+<SpecificationFreeText>Toinen rivi           Toinen rivi                                       1 000,00</SpecificationFreeText>
+<SpecificationFreeText>Kolmas rivi           3/2                                                   1,00</SpecificationFreeText>
 <SpecificationFreeText>Muotoituja tietoja voidaan k‰ytt‰‰ mm.tarkemman erittelyn esitt‰miseen:</SpecificationFreeText>
 </SpecificationDetails>
 <EpiDetails>

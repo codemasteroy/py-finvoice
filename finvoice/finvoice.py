@@ -492,7 +492,7 @@ def raise_parse_error(node, msg):
     raise GDSParseError(msg)
 
 def raise_value_error(value, msg):
-    msg = '%s (element %s)' % (msg, value, )
+    msg = '%s (value "%s")' % (msg, value, )
     raise GDSParseError(msg)
 
 
@@ -10895,37 +10895,6 @@ class SellerAccountIDType(GeneratedsSuper):
             self.IdentificationSchemeName = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-    def validate_valueOf_(self, value):
-        if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
-            pass
-        else:
-            raise_value_error( value, 'Expected less than 35 characters' )
-        return value
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        self.valueOf_ = get_all_text_(node)
-        self.validate_valueOf_(self.valueOf_)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
-    def validate_IdentificationSchemeName(self, value):
-        if ( value == "IBAN" ):
-            pass
-        else:
-            raise_value_error( value, 'Expected "IBAN"' )
-        return value
-    def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('IdentificationSchemeName', node)
-        if value is not None and 'IdentificationSchemeName' not in already_processed:
-            already_processed.add('IdentificationSchemeName')
-            self.IdentificationSchemeName = value
-            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
-        value = find_attr_value_('xsi:type', node)
-        if value is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
-            self.extensiontype_ = value
 # end class SellerAccountIDType
 
 
@@ -11011,37 +10980,6 @@ class SellerBicType(GeneratedsSuper):
             self.IdentificationSchemeName = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-    def validate_valueOf_(self, value):
-        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
-            pass
-        else:
-            raise_value_error( value, 'Expected value between 8..11 characters' )
-        return value
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        self.valueOf_ = get_all_text_(node)
-        self.validate_valueOf_(self.valueOf_)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
-    def validate_IdentificationSchemeName(self, value):
-        if ( value == "BIC" ):
-            pass
-        else:
-            raise_value_error( value, 'Expected "BIC"' )
-        return value
-    def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('IdentificationSchemeName', node)
-        if value is not None and 'IdentificationSchemeName' not in already_processed:
-            already_processed.add('IdentificationSchemeName')
-            self.IdentificationSchemeName = value
-            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
-        value = find_attr_value_('xsi:type', node)
-        if value is not None and 'xsi:type' not in already_processed:
-            already_processed.add('xsi:type')
-            self.extensiontype_ = value
 # end class SellerBicType
 
 
@@ -11764,52 +11702,6 @@ class SellerPartyDetailsType(GeneratedsSuper):
             obj_.build(child_)
             self.SellerPostalAddressDetails = obj_
             obj_.original_tagname_ = 'SellerPostalAddressDetails'
-    def validate_SellerOrganisationNamesType(self, value):
-        if ( value.__len__() <= 3 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
-        return value
-    def validate_SellerOrganisationNamesType(self, value):
-        if ( value.__len__() <= 3 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
-        return value
-    def validate_SellerOrganisationBankName(self, value):
-        if ( value.__len__() <= 2 ):
-            pass
-        else:
-            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
-        return value
-    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'SellerPartyIdentifier':
-            SellerPartyIdentifier_ = child_.text
-            SellerPartyIdentifier_ = self.gds_validate_string(SellerPartyIdentifier_, node, 'SellerPartyIdentifier')
-            self.SellerPartyIdentifier = SellerPartyIdentifier_
-            self.validate_genericStringType1_48(self.SellerPartyIdentifier)    # validate type genericStringType1_48
-        elif nodeName_ == 'SellerOrganisationNames':
-            obj_ = SellerOrganisationNamesType.factory()
-            obj_.build(child_)
-            self.SellerOrganisationNames.append(obj_)
-            self.validate_SellerOrganisationNamesType(self.SellerOrganisationNames)
-            obj_.original_tagname_ = 'SellerOrganisationNames'
-        elif nodeName_ == 'SellerOrganisationBankName':
-            SellerOrganisationBankName_ = child_.text
-            SellerOrganisationBankName_ = self.gds_validate_string(SellerOrganisationBankName_, node, 'SellerOrganisationBankName')
-            self.SellerOrganisationBankName.append(SellerOrganisationBankName_)
-            self.validate_genericStringType1_35(self.SellerOrganisationBankName)    # validate type genericStringType1_35
-            self.validate_SellerOrganisationBankName(self.SellerOrganisationBankName)
-        elif nodeName_ == 'SellerPostalAddressDetails':
-            obj_ = SellerPostalAddressDetailsType.factory()
-            obj_.build(child_)
-            self.SellerPostalAddressDetails = obj_
-            obj_.original_tagname_ = 'SellerPostalAddressDetails'
-        elif nodeName_ == 'IndustryCode':
-            IndustryCode_ = child_.text
-            IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
-            self.IndustryCode = IndustryCode_
-            self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
 # end class SellerPartyDetailsType
 
 
@@ -15640,34 +15532,6 @@ class date(GeneratedsSuper):
             self.Format = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-    def validate_valueOf_(self, value):
-        import datetime
-        if ( datetime.datetime.strptime( value, '%Y%m%d' ).strftime( '%Y%m%d' ) == value ):
-            pass
-        else:
-            raise_value_error( value, 'Time format does not match' )
-        return value
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        self.valueOf_ = get_all_text_(node)
-        self.validate_valueOf_(self.valueOf_)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
-    def validate_Format(self, value):
-        if ( value == "CCYYMMDD" ):
-            pass
-        else:
-            raise_value_error( value, 'Expected "CCYYMMDD"' )
-        return value
-    def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('Format', node)
-        if value is not None and 'Format' not in already_processed:
-            already_processed.add('Format')
-            self.Format = value
-            self.validate_Format(self.Format)
 # end class date
 
 
