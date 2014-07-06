@@ -694,10 +694,17 @@ class FinvoiceSenderInfo(GeneratedsSuper):
     def set_Version(self, Version): self.Version = Version
     def validate_genericStringType5_35(self, value):
         # Validate type genericStringType5_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 5 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 5 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 5..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 5..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 5 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 5..35 characters' )
         return value
     def validate_YesNoType(self, value):
         # Validate type YesNoType, a restriction on xs:NMTOKEN.
@@ -916,31 +923,59 @@ class InvoiceSenderInformationDetailsType(GeneratedsSuper):
     def set_NewInvoiceSenderIntermediatorAddress(self, NewInvoiceSenderIntermediatorAddress): self.NewInvoiceSenderIntermediatorAddress = NewInvoiceSenderIntermediatorAddress
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 70 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..70 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
         return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 512 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..512 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
         return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
         return value
     def validate_genericNMtokenType8_11(self, value):
         # Validate type genericNMtokenType8_11, a restriction on genericNMtokenType.
-        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 8 <= value.__len__() <= 11 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 8..11 characters' )
         else:
-            raise_value_error( value, 'Expected value between 8..11 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 8 <= v.__len__() <= 11 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 8..11 characters' )
         return value
     def hasContent_(self):
         if (
@@ -1108,10 +1143,17 @@ class MessageDetailsType(GeneratedsSuper):
     def set_SenderInfoIdentifier(self, SenderInfoIdentifier): self.SenderInfoIdentifier = SenderInfoIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
         return value
     def validate_MessageActionCodeType(self, value):
         # Validate type MessageActionCodeType, a restriction on xs:string.
@@ -1131,10 +1173,17 @@ class MessageDetailsType(GeneratedsSuper):
         return value
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 48 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..48 characters' )
         else:
-            raise_value_error( value, 'Expected value between 1..48 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 48 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..48 characters' )
         return value
     def hasContent_(self):
         if (
@@ -1701,17 +1750,31 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
     def set_SellerServiceCode(self, SellerServiceCode): self.SellerServiceCode = SellerServiceCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
         return value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 1..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
         return value
     def validate_SellerServiceCodeType(self, value):
         # Validate type SellerServiceCodeType, a restriction on xs:NMTOKEN.
@@ -1853,6 +1916,12 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
         else:
             raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
         return value
+    def validate_SellerInvoiceTypeDetailsType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'SellerDirectDebitIdentifier':
             SellerDirectDebitIdentifier_ = child_.text
@@ -1874,6 +1943,7 @@ class SellerInvoiceDetailsType(GeneratedsSuper):
             obj_ = SellerInvoiceTypeDetailsType.factory()
             obj_.build(child_)
             self.SellerInvoiceTypeDetails.append(obj_)
+            self.validate_SellerInvoiceTypeDetailsType(self.SellerInvoiceTypeDetails)
             obj_.original_tagname_ = 'SellerInvoiceTypeDetails'
         elif nodeName_ == 'SellerServiceCode':
             SellerServiceCode_ = child_.text
@@ -1930,24 +2000,45 @@ class SellerPartyDetailsType(GeneratedsSuper):
     def set_IndustryCode(self, IndustryCode): self.IndustryCode = IndustryCode
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 48 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..48 characters' )
         else:
-            raise_value_error( value, 'Expected value between 1..48 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 48 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..48 characters' )
         return value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 1..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
         return value
     def validate_genericStringType0_6(self, value):
         # Validate type genericStringType0_6, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 0 <= value.__len__() <= 6 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 6 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..6 characters' )
         else:
-            raise_value_error( value, 'Expected value between 0..6 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 6 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..6 characters' )
         return value
     def hasContent_(self):
         if (
@@ -2075,6 +2166,52 @@ class SellerPartyDetailsType(GeneratedsSuper):
             IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
             self.IndustryCode = IndustryCode_
             self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
+    def validate_SellerOrganisationNamesType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def validate_SellerOrganisationNamesType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def validate_SellerOrganisationBankName(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerPartyIdentifier':
+            SellerPartyIdentifier_ = child_.text
+            SellerPartyIdentifier_ = self.gds_validate_string(SellerPartyIdentifier_, node, 'SellerPartyIdentifier')
+            self.SellerPartyIdentifier = SellerPartyIdentifier_
+            self.validate_genericStringType1_48(self.SellerPartyIdentifier)    # validate type genericStringType1_48
+        elif nodeName_ == 'SellerOrganisationNames':
+            obj_ = SellerOrganisationNamesType.factory()
+            obj_.build(child_)
+            self.SellerOrganisationNames.append(obj_)
+            self.validate_SellerOrganisationNamesType(self.SellerOrganisationNames)
+            obj_.original_tagname_ = 'SellerOrganisationNames'
+        elif nodeName_ == 'SellerOrganisationBankName':
+            SellerOrganisationBankName_ = child_.text
+            SellerOrganisationBankName_ = self.gds_validate_string(SellerOrganisationBankName_, node, 'SellerOrganisationBankName')
+            self.SellerOrganisationBankName.append(SellerOrganisationBankName_)
+            self.validate_genericStringType1_35(self.SellerOrganisationBankName)    # validate type genericStringType1_35
+            self.validate_SellerOrganisationBankName(self.SellerOrganisationBankName)
+        elif nodeName_ == 'SellerPostalAddressDetails':
+            obj_ = SellerPostalAddressDetailsType.factory()
+            obj_.build(child_)
+            self.SellerPostalAddressDetails = obj_
+            obj_.original_tagname_ = 'SellerPostalAddressDetails'
+        elif nodeName_ == 'IndustryCode':
+            IndustryCode_ = child_.text
+            IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
+            self.IndustryCode = IndustryCode_
+            self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
 # end class SellerPartyDetailsType
 
 
@@ -2107,8 +2244,11 @@ class SellerOrganisationNamesType(GeneratedsSuper):
     def set_LanguageCode(self, LanguageCode): self.LanguageCode = LanguageCode
     def validate_genericStringType2_70(self, value):
         # Validate type genericStringType2_70, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 2 <= value.__len__() <= 70 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..70 characters' )
         else:
             for v in value:
                 if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 70 ):
@@ -2200,6 +2340,19 @@ class SellerOrganisationNamesType(GeneratedsSuper):
             SellerOrganisationName_ = self.gds_validate_string(SellerOrganisationName_, node, 'SellerOrganisationName')
             self.SellerOrganisationName.append(SellerOrganisationName_)
             self.validate_genericStringType2_70(self.SellerOrganisationName)    # validate type genericStringType2_70
+    def validate_SellerOrganisationName(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 2 elements' )
+        return value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerOrganisationName':
+            SellerOrganisationName_ = child_.text
+            SellerOrganisationName_ = self.gds_validate_string(SellerOrganisationName_, node, 'SellerOrganisationName')
+            self.SellerOrganisationName.append(SellerOrganisationName_)
+            self.validate_genericStringType2_70(self.SellerOrganisationName)    # validate type genericStringType2_70
+            self.validate_SellerOrganisationName(self.SellerOrganisationName)
 # end class SellerOrganisationNamesType
 
 
@@ -2242,17 +2395,31 @@ class SellerPostalAddressDetailsType(GeneratedsSuper):
     def set_SellerPostOfficeBoxIdentifier(self, SellerPostOfficeBoxIdentifier): self.SellerPostOfficeBoxIdentifier = SellerPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 2 <= value.__len__() <= 35 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
         else:
-            raise_value_error( value, 'Expected value between 2..35 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
         return value
     def validate_genericStringType1_48(self, value):
         # Validate type genericStringType1_48, a restriction on xs:string.
-        if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 48 ):
-            pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 48 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..48 characters' )
         else:
-            raise_value_error( value, 'Expected value between 1..48 characters' )
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 48 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..48 characters' )
         return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
@@ -3375,6 +3542,21 @@ class SellerInvoiceTypeTextType(TextLanguageRequired):
         super(SellerInvoiceTypeTextType, self).buildAttributes(node, attrs, already_processed)
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value less than 35 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
 # end class SellerInvoiceTypeTextType
 
 

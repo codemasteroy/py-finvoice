@@ -84,7 +84,7 @@ class MethodSpec(object):
 #
 # Replace the following method specifications with your own.
 
-method1 = MethodSpec(name='validate_valueOf_',
+method10 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
@@ -96,7 +96,7 @@ method1 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerAccountIDType|SellerAccountIDType2$',
     )
 
-method2 = MethodSpec(name='build',
+method20 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -111,7 +111,7 @@ method2 = MethodSpec(name='build',
     class_names=r'^SellerAccountIDType|SellerAccountIDType2$',
     )
 
-method3 = MethodSpec(name='validate_IdentificationSchemeName',
+method30 = MethodSpec(name='validate_IdentificationSchemeName',
     source='''\
     def validate_IdentificationSchemeName(self, value):
         if ( value == "IBAN" ):
@@ -123,7 +123,7 @@ method3 = MethodSpec(name='validate_IdentificationSchemeName',
     class_names=r'^SellerAccountIDType|SellerAccountIDType2$',
     )
 
-method4 = MethodSpec(name='buildAttributes',
+method40 = MethodSpec(name='buildAttributes',
     source='''\
     def buildAttributes(self, node, attrs, already_processed):
         value = find_attr_value_('IdentificationSchemeName', node)
@@ -139,7 +139,7 @@ method4 = MethodSpec(name='buildAttributes',
     class_names=r'^SellerAccountIDType|SellerAccountIDType2$',
     )
 
-method5 = MethodSpec(name='validate_valueOf_',
+method50 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
@@ -151,7 +151,7 @@ method5 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerBicType|SellerBicType2$',
     )
 
-method6 = MethodSpec(name='build',
+method60 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -166,7 +166,7 @@ method6 = MethodSpec(name='build',
     class_names=r'^SellerBicType|SellerBicType2$',
     )
 
-method7 = MethodSpec(name='validate_IdentificationSchemeName',
+method70 = MethodSpec(name='validate_IdentificationSchemeName',
     source='''\
     def validate_IdentificationSchemeName(self, value):
         if ( value == "BIC" ):
@@ -178,7 +178,7 @@ method7 = MethodSpec(name='validate_IdentificationSchemeName',
     class_names=r'^SellerBicType|SellerBicType2$',
     )
 
-method8 = MethodSpec(name='buildAttributes',
+method80 = MethodSpec(name='buildAttributes',
     source='''\
     def buildAttributes(self, node, attrs, already_processed):
         value = find_attr_value_('IdentificationSchemeName', node)
@@ -194,7 +194,7 @@ method8 = MethodSpec(name='buildAttributes',
     class_names=r'^SellerBicType|SellerBicType2$',
     )
 
-method9 = MethodSpec(name='validate_SellerInstructionFreeTextType',
+method90 = MethodSpec(name='validate_SellerInstructionFreeTextType',
     source='''\
     def validate_SellerInstructionFreeTextType(self, value):
         if ( value.__len__() <= 3 ):
@@ -206,7 +206,19 @@ method9 = MethodSpec(name='validate_SellerInstructionFreeTextType',
     class_names=r'^SellerInvoiceDetailsType$',
     )
 
-method10 = MethodSpec(name='buildChildren',
+method91 = MethodSpec(name='validate_SellerInvoiceTypeDetailsType',
+    source='''\
+    def validate_SellerInvoiceTypeDetailsType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+''',
+    class_names=r'^SellerInvoiceDetailsType$',
+    )
+
+method100 = MethodSpec(name='buildChildren',
     source='''\
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'SellerDirectDebitIdentifier':
@@ -229,6 +241,7 @@ method10 = MethodSpec(name='buildChildren',
             obj_ = SellerInvoiceTypeDetailsType.factory()
             obj_.build(child_)
             self.SellerInvoiceTypeDetails.append(obj_)
+            self.validate_SellerInvoiceTypeDetailsType(self.SellerInvoiceTypeDetails)
             obj_.original_tagname_ = 'SellerInvoiceTypeDetails'
         elif nodeName_ == 'SellerServiceCode':
             SellerServiceCode_ = child_.text
@@ -239,7 +252,7 @@ method10 = MethodSpec(name='buildChildren',
     class_names=r'^SellerInvoiceDetailsType$',
     )
 
-method11 = MethodSpec(name='validate_valueOf_',
+method110 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         if ( isinstance( value, basestring ) and 1 <= value.__len__() <= 420 ):
@@ -251,7 +264,7 @@ method11 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerInstructionFreeTextType$',
     )
 
-method12 = MethodSpec(name='build',
+method120 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -266,7 +279,7 @@ method12 = MethodSpec(name='build',
     class_names=r'^SellerInstructionFreeTextType$',
     )
 
-method13 = MethodSpec(name='validate_valueOf_',
+method130 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
@@ -278,7 +291,7 @@ method13 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerInvoiceTypeTextType$',
     )
 
-method14 = MethodSpec(name='build',
+method140 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -293,7 +306,7 @@ method14 = MethodSpec(name='build',
     class_names=r'^SellerInvoiceTypeTextType$',
     )
 
-method13 = MethodSpec(name='validate_valueOf_',
+method150 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         if ( isinstance( value, basestring ) and 4 <= value.__len__() <= 70 ):
@@ -305,7 +318,7 @@ method13 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerInvoiceIdentifierTextType3$',
     )
 
-method14 = MethodSpec(name='build',
+method160 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -320,7 +333,7 @@ method14 = MethodSpec(name='build',
     class_names=r'^SellerInvoiceIdentifierTextType3$',
     )
 
-method15 = MethodSpec(name='validate_valueOf_',
+method170 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_SellerInvoiceIdentifierTextType3(self, value):
         if ( value.__len__() <= 2 ):
@@ -332,7 +345,7 @@ method15 = MethodSpec(name='validate_valueOf_',
     class_names=r'^SellerInvoiceTypeDetailsType$',
     )
 
-method16 = MethodSpec(name='buildChildren',
+method180 = MethodSpec(name='buildChildren',
     source='''\
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'SellerInvoiceTypeText':
@@ -350,7 +363,7 @@ method16 = MethodSpec(name='buildChildren',
     class_names=r'^SellerInvoiceTypeDetailsType$',
     )
 
-method17 = MethodSpec(name='validate_valueOf_',
+method190 = MethodSpec(name='validate_valueOf_',
     source='''\
     def validate_valueOf_(self, value):
         import datetime
@@ -363,7 +376,7 @@ method17 = MethodSpec(name='validate_valueOf_',
     class_names=r'^date$',
     )
 
-method18 = MethodSpec(name='build',
+method200 = MethodSpec(name='build',
     source='''\
     def build(self, node):
         already_processed = set()
@@ -378,7 +391,7 @@ method18 = MethodSpec(name='build',
     class_names=r'^date$',
     )
 
-method19 = MethodSpec(name='validate_Format',
+method210 = MethodSpec(name='validate_Format',
     source='''\
     def validate_Format(self, value):
         if ( value == "CCYYMMDD" ):
@@ -390,7 +403,7 @@ method19 = MethodSpec(name='validate_Format',
     class_names=r'^date$',
     )
 
-method20 = MethodSpec(name='buildAttributes',
+method220 = MethodSpec(name='buildAttributes',
     source='''\
     def buildAttributes(self, node, attrs, already_processed):
         value = find_attr_value_('Format', node)
@@ -401,31 +414,124 @@ method20 = MethodSpec(name='buildAttributes',
 ''',
     class_names=r'^date$',
     )
+
+method230 = MethodSpec(name='validate_SellerOrganisationNamesType',
+    source='''\
+    def validate_SellerOrganisationNamesType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+''',
+    class_names=r'^SellerPartyDetailsType$',
+    )
+
+method231 = MethodSpec(name='validate_SellerOrganisationBankName',
+    source='''\
+    def validate_SellerOrganisationBankName(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+''',
+    class_names=r'^SellerPartyDetailsType$',
+    )
+
+method240 = MethodSpec(name='buildChildren',
+    source='''\
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerPartyIdentifier':
+            SellerPartyIdentifier_ = child_.text
+            SellerPartyIdentifier_ = self.gds_validate_string(SellerPartyIdentifier_, node, 'SellerPartyIdentifier')
+            self.SellerPartyIdentifier = SellerPartyIdentifier_
+            self.validate_genericStringType1_48(self.SellerPartyIdentifier)    # validate type genericStringType1_48
+        elif nodeName_ == 'SellerOrganisationNames':
+            obj_ = SellerOrganisationNamesType.factory()
+            obj_.build(child_)
+            self.SellerOrganisationNames.append(obj_)
+            self.validate_SellerOrganisationNamesType(self.SellerOrganisationNames)
+            obj_.original_tagname_ = 'SellerOrganisationNames'
+        elif nodeName_ == 'SellerOrganisationBankName':
+            SellerOrganisationBankName_ = child_.text
+            SellerOrganisationBankName_ = self.gds_validate_string(SellerOrganisationBankName_, node, 'SellerOrganisationBankName')
+            self.SellerOrganisationBankName.append(SellerOrganisationBankName_)
+            self.validate_genericStringType1_35(self.SellerOrganisationBankName)    # validate type genericStringType1_35
+            self.validate_SellerOrganisationBankName(self.SellerOrganisationBankName)
+        elif nodeName_ == 'SellerPostalAddressDetails':
+            obj_ = SellerPostalAddressDetailsType.factory()
+            obj_.build(child_)
+            self.SellerPostalAddressDetails = obj_
+            obj_.original_tagname_ = 'SellerPostalAddressDetails'
+        elif nodeName_ == 'IndustryCode':
+            IndustryCode_ = child_.text
+            IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
+            self.IndustryCode = IndustryCode_
+            self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
+''',
+    class_names=r'^SellerPartyDetailsType$',
+    )
+
+method250 = MethodSpec(name='validate_SellerOrganisationName',
+    source='''\
+    def validate_SellerOrganisationName(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 2 elements' )
+        return value
+''',
+    class_names=r'^SellerOrganisationNamesType$',
+    )
+
+method260 = MethodSpec(name='buildChildren',
+    source='''\
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerOrganisationName':
+            SellerOrganisationName_ = child_.text
+            SellerOrganisationName_ = self.gds_validate_string(SellerOrganisationName_, node, 'SellerOrganisationName')
+            self.SellerOrganisationName.append(SellerOrganisationName_)
+            self.validate_genericStringType2_70(self.SellerOrganisationName)    # validate type genericStringType2_70
+            self.validate_SellerOrganisationName(self.SellerOrganisationName)
+''',
+    class_names=r'^SellerOrganisationNamesType$',
+    )
+
 #
 # Provide a list of your method specifications.
 #   This list of specifications must be named METHOD_SPECS.
 #
 METHOD_SPECS = (
-    method1,
-    method2,
-    method3,
-    method4,
-    method5,
-    method6,
-    method7,
-    method8,
-    method9,
     method10,
-    method11,
-    method12,
-    method13,
-    method14,
-    method15,
-    method16,
-    method17,
-    method18,
-    method19,
     method20,
+    method30,
+    method40,
+    method50,
+    method60,
+    method70,
+    method80,
+    method90,
+    method91,
+    method100,
+    method110,
+    method120,
+    method130,
+    method140,
+    method150,
+    method160,
+    method170,
+    method180,
+    method190,
+    method200,
+    method210,
+    method220,
+    method230,
+    method230,
+    method231,
+    method240,
+    method250,
+    method260,
     )
 
 
