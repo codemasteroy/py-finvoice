@@ -9,7 +9,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # py-finvoice is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,9 +19,13 @@
 # along with py-finvoice. If not, see <http://www.gnu.org/licenses/>.
 ##
 
+# Command line:
+#   /usr/local/bin/generateDS.py -s "finvoice/finvoicesubs.py" -o "finvoice/finvoice.py" --super="finvoice.finvoice" --external-encoding="iso8859-15" --no-dates --no-versions --validator-bodies="stubs/validator/finvoice/" --user-methods="generators.gends_user_methods_finvoice" xsd/Finvoice.xsd
+
+
 import sys
 
-import finvoice as supermod
+import finvoice.finvoice as supermod
 
 etree_ = None
 Verbose_import_ = False
@@ -82,7 +86,7 @@ def parsexml_(*args, **kwargs):
 # Globals
 #
 
-ExternalEncoding = 'ascii'
+ExternalEncoding = 'iso8859-15'
 
 #
 # Data representation classes
@@ -789,8 +793,8 @@ def parseLiteral(inFilename, silence=False):
     # Enable Python to collect the space used by the DOM.
     doc = None
     if not silence:
-        sys.stdout.write('#from ??? import *\n\n')
-        sys.stdout.write('import ??? as model_\n\n')
+        sys.stdout.write('#from finvoice.finvoice import *\n\n')
+        sys.stdout.write('import finvoice.finvoice as model_\n\n')
         sys.stdout.write('rootObj = model_.rootClass(\n')
         rootObj.exportLiteral(sys.stdout, 0, name_=rootTag)
         sys.stdout.write(')\n')

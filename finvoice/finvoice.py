@@ -10,7 +10,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # py-finvoice is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with py-finvoice. If not, see <http://www.gnu.org/licenses/>.
 ##
+
+# Command line:
+#   /usr/local/bin/generateDS.py -s "finvoice/finvoicesubs.py" -o "finvoice/finvoice.py" --super="finvoice.finvoice" --external-encoding="iso8859-15" --no-dates --no-versions --validator-bodies="stubs/validator/finvoice/" --user-methods="generators.gends_user_methods_finvoice" xsd/Finvoice.xsd
 
 import sys
 import getopt
@@ -391,7 +394,7 @@ except ImportError, exp:
 # Globals
 #
 
-ExternalEncoding = 'ascii'
+ExternalEncoding = 'iso8859-15'
 Tag_pattern_ = re_.compile(r'({.*})?(.*)')
 String_cleanup_pat_ = re_.compile(r"[\n\r\s]+")
 Namespace_extract_pat_ = re_.compile(r'{(.*)}(.*)')
@@ -486,6 +489,10 @@ def raise_parse_error(node, msg):
             msg, node.tag, node.sourceline, )
     else:
         msg = '%s (element %s)' % (msg, node.tag, )
+    raise GDSParseError(msg)
+
+def raise_value_error(value, msg):
+    msg = '%s (element %s)' % (msg, value, )
     raise GDSParseError(msg)
 
 
@@ -631,6 +638,60 @@ def _cast(typ, value):
 
 
 class Finvoice(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('Version', 'xs:NMTOKEN', 0),
+        MemberSpec_('MessageTransmissionDetails', 'MessageTransmissionDetailsType', 0),
+        MemberSpec_('SellerPartyDetails', 'SellerPartyDetailsType', 0),
+        MemberSpec_('SellerOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerSiteCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerContactPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerContactPersonFunction', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SellerContactPersonDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SellerCommunicationDetails', 'SellerCommunicationDetailsType', 0),
+        MemberSpec_('SellerInformationDetails', 'SellerInformationDetailsType', 0),
+        MemberSpec_('InvoiceSenderPartyDetails', 'InvoiceSenderPartyDetailsType', 0),
+        MemberSpec_('InvoiceRecipientPartyDetails', 'InvoiceRecipientPartyDetailsType', 0),
+        MemberSpec_('InvoiceRecipientOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientSiteCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientContactPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientContactPersonFunction', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceRecipientContactPersonDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceRecipientLanguageCode', ['LanguageCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('InvoiceRecipientCommunicationDetails', 'InvoiceRecipientCommunicationDetailsType', 0),
+        MemberSpec_('BuyerPartyDetails', 'BuyerPartyDetailsType', 0),
+        MemberSpec_('BuyerOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerSiteCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerContactPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerContactPersonFunction', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('BuyerContactPersonDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('BuyerCommunicationDetails', 'BuyerCommunicationDetailsType', 0),
+        MemberSpec_('DeliveryPartyDetails', 'DeliveryPartyDetailsType', 0),
+        MemberSpec_('DeliveryOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliverySiteCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryContactPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryContactPersonFunction', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('DeliveryContactPersonDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('DeliveryCommunicationDetails', 'DeliveryCommunicationDetailsType', 0),
+        MemberSpec_('DeliveryDetails', 'DeliveryDetailsType', 0),
+        MemberSpec_('AnyPartyDetails', 'AnyPartyDetailsType', 1),
+        MemberSpec_('InvoiceDetails', 'InvoiceDetailsType', 0),
+        MemberSpec_('PaymentStatusDetails', 'PaymentStatusDetailsType', 0),
+        MemberSpec_('PartialPaymentDetails', 'PartialPaymentDetailsType', 1),
+        MemberSpec_('FactoringAgreementDetails', 'FactoringAgreementDetailsType', 0),
+        MemberSpec_('VirtualBankBarcode', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('InvoiceRow', 'InvoiceRowType', 1),
+        MemberSpec_('SpecificationDetails', 'SpecificationDetailsType', 0),
+        MemberSpec_('EpiDetails', 'EpiDetailsType', 0),
+        MemberSpec_('InvoiceUrlNameText', ['genericStringType0_512', 'xs:string'], 1),
+        MemberSpec_('InvoiceUrlText', ['genericStringType0_512', 'xs:string'], 1),
+        MemberSpec_('StorageUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('LayOutIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceSegmentIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ControlStampText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('AcceptanceStampText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('OriginalInvoiceFormat', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AttachmentMessageDetails', 'AttachmentMessageDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, Version=None, MessageTransmissionDetails=None, SellerPartyDetails=None, SellerOrganisationUnitNumber=None, SellerSiteCode=None, SellerContactPersonName=None, SellerContactPersonFunction=None, SellerContactPersonDepartment=None, SellerCommunicationDetails=None, SellerInformationDetails=None, InvoiceSenderPartyDetails=None, InvoiceRecipientPartyDetails=None, InvoiceRecipientOrganisationUnitNumber=None, InvoiceRecipientSiteCode=None, InvoiceRecipientContactPersonName=None, InvoiceRecipientContactPersonFunction=None, InvoiceRecipientContactPersonDepartment=None, InvoiceRecipientLanguageCode=None, InvoiceRecipientCommunicationDetails=None, BuyerPartyDetails=None, BuyerOrganisationUnitNumber=None, BuyerSiteCode=None, BuyerContactPersonName=None, BuyerContactPersonFunction=None, BuyerContactPersonDepartment=None, BuyerCommunicationDetails=None, DeliveryPartyDetails=None, DeliveryOrganisationUnitNumber=None, DeliverySiteCode=None, DeliveryContactPersonName=None, DeliveryContactPersonFunction=None, DeliveryContactPersonDepartment=None, DeliveryCommunicationDetails=None, DeliveryDetails=None, AnyPartyDetails=None, InvoiceDetails=None, PaymentStatusDetails=None, PartialPaymentDetails=None, FactoringAgreementDetails=None, VirtualBankBarcode=None, InvoiceRow=None, SpecificationDetails=None, EpiDetails=None, InvoiceUrlNameText=None, InvoiceUrlText=None, StorageUrlText=None, LayOutIdentifier=None, InvoiceSegmentIdentifier=None, ControlStampText=None, AcceptanceStampText=None, OriginalInvoiceFormat=None, AttachmentMessageDetails=None):
@@ -877,13 +938,39 @@ class Finvoice(GeneratedsSuper):
     def set_Version(self, Version): self.Version = Version
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_LanguageCodeType(self, value):
         # Validate type LanguageCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 and value in [ 'FI', 'SV', 'EN' ]):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 639-1' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def hasContent_(self):
         if (
             self.MessageTransmissionDetails is not None or
@@ -1678,6 +1765,11 @@ class Finvoice(GeneratedsSuper):
 
 
 class MessageTransmissionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('MessageSenderDetails', 'MessageSenderDetailsType', 0),
+        MemberSpec_('MessageReceiverDetails', 'MessageReceiverDetailsType', 0),
+        MemberSpec_('MessageDetails', 'MessageDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, MessageSenderDetails=None, MessageReceiverDetails=None, MessageDetails=None):
@@ -1793,6 +1885,21 @@ class MessageTransmissionDetailsType(GeneratedsSuper):
 
 
 class AnyPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AnyPartyText', 'anypartytexttype0_35', 0),
+        MemberSpec_('AnyPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('AnyPartyOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('AnyPartyOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyCode', 'PartyIdentifierType', 0),
+        MemberSpec_('AnyPartyContactPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyContactPersonFunction', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('AnyPartyContactPersonDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('AnyPartyCommunicationDetails', 'AnyPartyCommunicationDetailsType', 0),
+        MemberSpec_('AnyPartyPostalAddressDetails', 'AnyPartyPostalAddressDetailsType', 0),
+        MemberSpec_('AnyPartyOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartySiteCode', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AnyPartyText=None, AnyPartyIdentifier=None, AnyPartyOrganisationName=None, AnyPartyOrganisationDepartment=None, AnyPartyOrganisationTaxCode=None, AnyPartyCode=None, AnyPartyContactPersonName=None, AnyPartyContactPersonFunction=None, AnyPartyContactPersonDepartment=None, AnyPartyCommunicationDetails=None, AnyPartyPostalAddressDetails=None, AnyPartyOrganisationUnitNumber=None, AnyPartySiteCode=None):
@@ -1868,10 +1975,32 @@ class AnyPartyDetailsType(GeneratedsSuper):
     def set_AnyPartySiteCode(self, AnyPartySiteCode): self.AnyPartySiteCode = AnyPartySiteCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.AnyPartyText is not None or
@@ -2114,6 +2243,16 @@ class AnyPartyDetailsType(GeneratedsSuper):
 
 
 class FactoringAgreementDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('FactoringAgreementIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('TransmissionListIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('EndorsementClauseCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('FactoringTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('FactoringFreeText', ['genericStringType0_70', 'xs:string'], 1),
+        MemberSpec_('FactoringPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('FactoringPartyName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('FactoringPartyPostalAddressDetails', 'FactoringPartyPostalAddressDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, FactoringAgreementIdentifier=None, TransmissionListIdentifier=None, EndorsementClauseCode=None, FactoringTypeCode=None, FactoringFreeText=None, FactoringPartyIdentifier=None, FactoringPartyName=None, FactoringPartyPostalAddressDetails=None):
@@ -2156,10 +2295,32 @@ class FactoringAgreementDetailsType(GeneratedsSuper):
     def set_FactoringPartyPostalAddressDetails(self, FactoringPartyPostalAddressDetails): self.FactoringPartyPostalAddressDetails = FactoringPartyPostalAddressDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.FactoringAgreementIdentifier is not None or
@@ -2318,6 +2479,10 @@ class FactoringAgreementDetailsType(GeneratedsSuper):
 
 
 class BuyerCommunicationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('BuyerPhoneNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerEmailaddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, BuyerPhoneNumberIdentifier=None, BuyerEmailaddressIdentifier=None):
@@ -2336,10 +2501,32 @@ class BuyerCommunicationDetailsType(GeneratedsSuper):
     def set_BuyerEmailaddressIdentifier(self, BuyerEmailaddressIdentifier): self.BuyerEmailaddressIdentifier = BuyerEmailaddressIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.BuyerPhoneNumberIdentifier is not None or
@@ -2418,6 +2605,14 @@ class BuyerCommunicationDetailsType(GeneratedsSuper):
 
 
 class BuyerPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('BuyerPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerOrganisationName', ['genericStringType2_70', 'xs:string'], 1),
+        MemberSpec_('BuyerOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('BuyerOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerCode', 'PartyIdentifierType', 0),
+        MemberSpec_('BuyerPostalAddressDetails', 'BuyerPostalAddressDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, BuyerPartyIdentifier=None, BuyerOrganisationName=None, BuyerOrganisationDepartment=None, BuyerOrganisationTaxCode=None, BuyerCode=None, BuyerPostalAddressDetails=None):
@@ -2460,10 +2655,32 @@ class BuyerPartyDetailsType(GeneratedsSuper):
     def set_BuyerPostalAddressDetails(self, BuyerPostalAddressDetails): self.BuyerPostalAddressDetails = BuyerPostalAddressDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_70(self, value):
         # Validate type genericStringType2_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.BuyerPartyIdentifier is not None or
@@ -2606,6 +2823,14 @@ class BuyerPartyDetailsType(GeneratedsSuper):
 
 
 class BuyerPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('BuyerStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('BuyerTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('BuyerPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('BuyerPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, BuyerStreetName=None, BuyerTownName=None, BuyerPostCodeIdentifier=None, CountryCode=None, CountryName=None, BuyerPostOfficeBoxIdentifier=None):
@@ -2642,13 +2867,39 @@ class BuyerPostalAddressDetailsType(GeneratedsSuper):
     def set_BuyerPostOfficeBoxIdentifier(self, BuyerPostOfficeBoxIdentifier): self.BuyerPostOfficeBoxIdentifier = BuyerPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.BuyerStreetName or
@@ -2781,6 +3032,10 @@ class BuyerPostalAddressDetailsType(GeneratedsSuper):
 
 
 class DeliveryCommunicationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DeliveryPhoneNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryEmailaddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DeliveryPhoneNumberIdentifier=None, DeliveryEmailaddressIdentifier=None):
@@ -2799,10 +3054,32 @@ class DeliveryCommunicationDetailsType(GeneratedsSuper):
     def set_DeliveryEmailaddressIdentifier(self, DeliveryEmailaddressIdentifier): self.DeliveryEmailaddressIdentifier = DeliveryEmailaddressIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.DeliveryPhoneNumberIdentifier is not None or
@@ -2881,6 +3158,39 @@ class DeliveryCommunicationDetailsType(GeneratedsSuper):
 
 
 class DeliveryDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DeliveryDate', 'date', 0),
+        MemberSpec_('DeliveryPeriodDetails', 'DeliveryPeriodDetailsType', 0),
+        MemberSpec_('ShipmentPartyDetails', 'ShipmentPartyDetailsType', 0),
+        MemberSpec_('DeliveryMethodText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('DeliveryTermsText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('DeliveryTermsCode', ['genericStringType1_4', 'xs:string'], 0),
+        MemberSpec_('TerminalAddressText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('WaybillIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('WaybillTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ClearanceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryNoteIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DelivererIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DelivererName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('DelivererCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('DelivererCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ModeOfTransportIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('CarrierName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('VesselName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('LocationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('TransportInformationDate', 'date', 0),
+        MemberSpec_('CountryOfOrigin', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('CountryOfDestinationName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DestinationCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('PlaceOfDischarge', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('FinalDestinationName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('ManufacturerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ManufacturerName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('ManufacturerCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('ManufacturerCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ManufacturerOrderIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('PackageDetails', 'PackageDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DeliveryDate=None, DeliveryPeriodDetails=None, ShipmentPartyDetails=None, DeliveryMethodText=None, DeliveryTermsText=None, DeliveryTermsCode=None, TerminalAddressText=None, WaybillIdentifier=None, WaybillTypeCode=None, ClearanceIdentifier=None, DeliveryNoteIdentifier=None, DelivererIdentifier=None, DelivererName=None, DelivererCountryCode=None, DelivererCountryName=None, ModeOfTransportIdentifier=None, CarrierName=None, VesselName=None, LocationIdentifier=None, TransportInformationDate=None, CountryOfOrigin=None, CountryOfDestinationName=None, DestinationCountryCode=None, PlaceOfDischarge=None, FinalDestinationName=None, ManufacturerIdentifier=None, ManufacturerName=None, ManufacturerCountryCode=None, ManufacturerCountryName=None, ManufacturerOrderIdentifier=None, PackageDetails=None):
@@ -3010,16 +3320,53 @@ class DeliveryDetailsType(GeneratedsSuper):
     def set_PackageDetails(self, PackageDetails): self.PackageDetails = PackageDetails
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_genericStringType1_4(self, value):
         # Validate type genericStringType1_4, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 4 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..4 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 4 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..4 characters' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def hasContent_(self):
         if (
             self.DeliveryDate is not None or
@@ -3480,6 +3827,14 @@ class DeliveryDetailsType(GeneratedsSuper):
 
 
 class DeliveryPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DeliveryPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('DeliveryOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('DeliveryOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryCode', 'PartyIdentifierType', 0),
+        MemberSpec_('DeliveryPostalAddressDetails', 'DeliveryPostalAddressDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DeliveryPartyIdentifier=None, DeliveryOrganisationName=None, DeliveryOrganisationDepartment=None, DeliveryOrganisationTaxCode=None, DeliveryCode=None, DeliveryPostalAddressDetails=None):
@@ -3522,10 +3877,32 @@ class DeliveryPartyDetailsType(GeneratedsSuper):
     def set_DeliveryPostalAddressDetails(self, DeliveryPostalAddressDetails): self.DeliveryPostalAddressDetails = DeliveryPostalAddressDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.DeliveryPartyIdentifier is not None or
@@ -3668,6 +4045,10 @@ class DeliveryPartyDetailsType(GeneratedsSuper):
 
 
 class DeliveryPeriodDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('StartDate', 'date', 0),
+        MemberSpec_('EndDate', 'date', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, StartDate=None, EndDate=None):
@@ -3766,6 +4147,14 @@ class DeliveryPeriodDetailsType(GeneratedsSuper):
 
 
 class DeliveryPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DeliveryStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('DeliveryTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DeliveryPostofficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DeliveryStreetName=None, DeliveryTownName=None, DeliveryPostCodeIdentifier=None, CountryCode=None, CountryName=None, DeliveryPostofficeBoxIdentifier=None):
@@ -3802,13 +4191,39 @@ class DeliveryPostalAddressDetailsType(GeneratedsSuper):
     def set_DeliveryPostofficeBoxIdentifier(self, DeliveryPostofficeBoxIdentifier): self.DeliveryPostofficeBoxIdentifier = DeliveryPostofficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.DeliveryStreetName or
@@ -3941,6 +4356,10 @@ class DeliveryPostalAddressDetailsType(GeneratedsSuper):
 
 
 class EpiAccountIDType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['genericNMtokenType1_34', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -4022,6 +4441,10 @@ class EpiAccountIDType(GeneratedsSuper):
 
 
 class EpiBfiIdentifierType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['genericNMtokenType8_11', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -4103,6 +4526,11 @@ class EpiBfiIdentifierType(GeneratedsSuper):
 
 
 class EpiDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiIdentificationDetails', 'EpiIdentificationDetailsType', 0),
+        MemberSpec_('EpiPartyDetails', 'EpiPartyDetailsType', 0),
+        MemberSpec_('EpiPaymentInstructionDetails', 'EpiPaymentInstructionDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiIdentificationDetails=None, EpiPartyDetails=None, EpiPaymentInstructionDetails=None):
@@ -4218,6 +4646,13 @@ class EpiDetailsType(GeneratedsSuper):
 
 
 class EpiIdentificationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiDate', 'date', 0),
+        MemberSpec_('EpiReference', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('EpiUrl', ['genericNMtokenType0_512', 'xs:token'], 0),
+        MemberSpec_('EpiEmail', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('EpiOrderInfo', ['genericTokenType0_70', 'xs:token'], 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiDate=None, EpiReference=None, EpiUrl=None, EpiEmail=None, EpiOrderInfo=None):
@@ -4251,16 +4686,61 @@ class EpiIdentificationDetailsType(GeneratedsSuper):
     def replace_EpiOrderInfo_at(self, index, value): self.EpiOrderInfo[index] = value
     def validate_genericNMtokenType0_35(self, value):
         # Validate type genericNMtokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericNMtokenType0_512(self, value):
         # Validate type genericNMtokenType0_512, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_genericTokenType0_70(self, value):
         # Validate type genericTokenType0_70, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.EpiDate is not None or
@@ -4386,6 +4866,10 @@ class EpiIdentificationDetailsType(GeneratedsSuper):
 
 
 class EpiPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiBfiPartyDetails', 'EpiBfiPartyDetailsType', 0),
+        MemberSpec_('EpiBeneficiaryPartyDetails', 'EpiBeneficiaryPartyDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiBfiPartyDetails=None, EpiBeneficiaryPartyDetails=None):
@@ -4484,6 +4968,10 @@ class EpiPartyDetailsType(GeneratedsSuper):
 
 
 class EpiBfiPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiBfiIdentifier', 'EpiBfiIdentifierType', 0),
+        MemberSpec_('EpiBfiName', ['genericStringType1_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiBfiIdentifier=None, EpiBfiName=None):
@@ -4502,7 +4990,18 @@ class EpiBfiPartyDetailsType(GeneratedsSuper):
     def set_EpiBfiName(self, EpiBfiName): self.EpiBfiName = EpiBfiName
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.EpiBfiIdentifier is not None or
@@ -4583,6 +5082,11 @@ class EpiBfiPartyDetailsType(GeneratedsSuper):
 
 
 class EpiBeneficiaryPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiNameAddressDetails', ['genericTokenType2_35', 'xs:token'], 0),
+        MemberSpec_('EpiBei', ['genericNMtokenType8_11', 'xs:token'], 0),
+        MemberSpec_('EpiAccountID', 'EpiAccountIDType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiNameAddressDetails=None, EpiBei=None, EpiAccountID=None):
@@ -4604,10 +5108,32 @@ class EpiBeneficiaryPartyDetailsType(GeneratedsSuper):
     def set_EpiAccountID(self, EpiAccountID): self.EpiAccountID = EpiAccountID
     def validate_genericTokenType2_35(self, value):
         # Validate type genericTokenType2_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_genericNMtokenType8_11(self, value):
         # Validate type genericNMtokenType8_11, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 8 <= value.__len__() <= 11 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 8..11 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 8 <= v.__len__() <= 11 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 8..11 characters' )
+        return value
     def hasContent_(self):
         if (
             self.EpiNameAddressDetails is not None or
@@ -4702,6 +5228,15 @@ class EpiBeneficiaryPartyDetailsType(GeneratedsSuper):
 
 
 class EpiPaymentInstructionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('EpiPaymentInstructionId', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('EpiTransactionTypeCode', ['genericTokenType3', 'xs:token'], 0),
+        MemberSpec_('EpiInstructionCode', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('EpiRemittanceInfoIdentifier', 'EpiRemittanceInfoIdentifierType', 0),
+        MemberSpec_('EpiInstructedAmount', 'epiAmount', 0),
+        MemberSpec_('EpiCharge', 'EpiChargeType', 0),
+        MemberSpec_('EpiDateOptionDate', 'date', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, EpiPaymentInstructionId=None, EpiTransactionTypeCode=None, EpiInstructionCode=None, EpiRemittanceInfoIdentifier=None, EpiInstructedAmount=None, EpiCharge=None, EpiDateOptionDate=None):
@@ -4735,10 +5270,32 @@ class EpiPaymentInstructionDetailsType(GeneratedsSuper):
     def set_EpiDateOptionDate(self, EpiDateOptionDate): self.EpiDateOptionDate = EpiDateOptionDate
     def validate_genericNMtokenType0_35(self, value):
         # Validate type genericNMtokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericTokenType3(self, value):
         # Validate type genericTokenType3, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( value.__len__() == 3 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value with 3 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and v.__len__() <= 3 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value with 3 characters' )
+        return value
     def hasContent_(self):
         if (
             self.EpiPaymentInstructionId is not None or
@@ -4888,6 +5445,10 @@ class EpiPaymentInstructionDetailsType(GeneratedsSuper):
 
 
 class EpiChargeType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('ChargeOption', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', 'xs:token', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, ChargeOption=None, valueOf_=None):
@@ -4969,6 +5530,10 @@ class EpiChargeType(GeneratedsSuper):
 
 
 class EpiRemittanceInfoIdentifierType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['EpiRemittanceInfoIdentifierPattern', 'xs:NMTOKEN'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -5050,6 +5615,63 @@ class EpiRemittanceInfoIdentifierType(GeneratedsSuper):
 
 
 class InvoiceDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceTypeCode', 'InvoiceTypeCodeType', 0),
+        MemberSpec_('InvoiceTypeText', ['genericStringType1_35', 'xs:string'], 0),
+        MemberSpec_('OriginCode', ['OriginCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('OriginText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceNumber', ['genericStringType1_20', 'xs:string'], 0),
+        MemberSpec_('InvoiceDate', 'date', 0),
+        MemberSpec_('OriginalInvoiceNumber', ['genericStringType1_20', 'xs:string'], 0),
+        MemberSpec_('InvoicingPeriodStartDate', 'date', 0),
+        MemberSpec_('InvoicingPeriodEndDate', 'date', 0),
+        MemberSpec_('SellerReferenceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerReferenceIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('BuyersSellerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellersBuyerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('OrderIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('OrderIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('OrderDate', 'date', 0),
+        MemberSpec_('OrdererName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SalesPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('OrderConfirmationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('OrderConfirmationDate', 'date', 0),
+        MemberSpec_('AgreementIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AgreementIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('AgreementTypeText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AgreementTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AgreementDate', 'date', 0),
+        MemberSpec_('NotificationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('NotificationDate', 'date', 0),
+        MemberSpec_('RegistrationNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ControllerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ControllerName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ControlDate', 'date', 0),
+        MemberSpec_('BuyerReferenceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ProjectReferenceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('DefinitionDetails', 'DefinitionDetailsType', 1),
+        MemberSpec_('InvoiceTotalVatExcludedAmount', 'amount', 0),
+        MemberSpec_('InvoiceTotalVatAmount', 'amount', 0),
+        MemberSpec_('InvoiceTotalVatIncludedAmount', 'amount', 0),
+        MemberSpec_('InvoiceTotalRoundoffAmount', 'amount', 0),
+        MemberSpec_('ExchangeRate', ['exchangeRate', 'xs:string'], 0),
+        MemberSpec_('OtherCurrencyAmountVatExcludedAmount', 'amount', 0),
+        MemberSpec_('OtherCurrencyAmountVatIncludedAmount', 'amount', 0),
+        MemberSpec_('CreditLimitAmount', 'amount', 0),
+        MemberSpec_('CreditInterestPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('OperationLimitAmount', 'amount', 0),
+        MemberSpec_('MonthlyAmount', 'amount', 0),
+        MemberSpec_('ShortProposedAccountIdentifier', ['genericNMtokenType0_4', 'xs:token'], 0),
+        MemberSpec_('NormalProposedAccountIdentifier', ['genericNMtokenType0_4', 'xs:token'], 0),
+        MemberSpec_('ProposedAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AccountDimensionText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('VatSpecificationDetails', 'VatSpecificationDetailsType', 1),
+        MemberSpec_('InvoiceFreeText', ['genericStringType0_512', 'xs:string'], 1),
+        MemberSpec_('InvoiceVatFreeText', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('PaymentTermsDetails', 'PaymentTermsDetailsType', 1),
+        MemberSpec_('DiscountDetails', 'DiscountDetailsType', 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceTypeCode=None, InvoiceTypeText=None, OriginCode=None, OriginText=None, InvoiceNumber=None, InvoiceDate=None, OriginalInvoiceNumber=None, InvoicingPeriodStartDate=None, InvoicingPeriodEndDate=None, SellerReferenceIdentifier=None, SellerReferenceIdentifierUrlText=None, BuyersSellerIdentifier=None, SellersBuyerIdentifier=None, OrderIdentifier=None, OrderIdentifierUrlText=None, OrderDate=None, OrdererName=None, SalesPersonName=None, OrderConfirmationIdentifier=None, OrderConfirmationDate=None, AgreementIdentifier=None, AgreementIdentifierUrlText=None, AgreementTypeText=None, AgreementTypeCode=None, AgreementDate=None, NotificationIdentifier=None, NotificationDate=None, RegistrationNumberIdentifier=None, ControllerIdentifier=None, ControllerName=None, ControlDate=None, BuyerReferenceIdentifier=None, ProjectReferenceIdentifier=None, DefinitionDetails=None, InvoiceTotalVatExcludedAmount=None, InvoiceTotalVatAmount=None, InvoiceTotalVatIncludedAmount=None, InvoiceTotalRoundoffAmount=None, ExchangeRate=None, OtherCurrencyAmountVatExcludedAmount=None, OtherCurrencyAmountVatIncludedAmount=None, CreditLimitAmount=None, CreditInterestPercent=None, OperationLimitAmount=None, MonthlyAmount=None, ShortProposedAccountIdentifier=None, NormalProposedAccountIdentifier=None, ProposedAccountText=None, AccountDimensionText=None, SellerAccountText=None, VatSpecificationDetails=None, InvoiceFreeText=None, InvoiceVatFreeText=None, PaymentTermsDetails=None, DiscountDetails=None):
@@ -5257,31 +5879,123 @@ class InvoiceDetailsType(GeneratedsSuper):
     def replace_DiscountDetails_at(self, index, value): self.DiscountDetails[index] = value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
+        return value
     def validate_OriginCodeType(self, value):
         # Validate type OriginCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( value != "Original" and value != "Copy" and value != "Cancel" ):
+            raise_value_error( value, 'Expected "Original", Copy" or "Cancel"' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType1_20(self, value):
         # Validate type genericStringType1_20, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_exchangeRate(self, value):
         # Validate type exchangeRate, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[0-9]{1,15}(,[0-9]{1,6})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [0-9]{1,15}(,[0-9]{1,6})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[0-9]{1,15}(,[0-9]{1,6})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [0-9]{1,15}(,[0-9]{1,6})?' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericNMtokenType0_4(self, value):
         # Validate type genericNMtokenType0_4, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 4 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..4 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 4 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..4 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceTypeCode is not None or
@@ -6072,6 +6786,10 @@ class InvoiceDetailsType(GeneratedsSuper):
 
 
 class InvoiceRecipientCommunicationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceRecipientPhoneNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientEmailaddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceRecipientPhoneNumberIdentifier=None, InvoiceRecipientEmailaddressIdentifier=None):
@@ -6090,10 +6808,32 @@ class InvoiceRecipientCommunicationDetailsType(GeneratedsSuper):
     def set_InvoiceRecipientEmailaddressIdentifier(self, InvoiceRecipientEmailaddressIdentifier): self.InvoiceRecipientEmailaddressIdentifier = InvoiceRecipientEmailaddressIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceRecipientPhoneNumberIdentifier is not None or
@@ -6172,6 +6912,10 @@ class InvoiceRecipientCommunicationDetailsType(GeneratedsSuper):
 
 
 class InvoiceRecipientDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceRecipientAddress', ['genericStringType1_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientIntermediatorAddress', ['genericNMtokenType8_11', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceRecipientAddress=None, InvoiceRecipientIntermediatorAddress=None):
@@ -6190,10 +6934,32 @@ class InvoiceRecipientDetailsType(GeneratedsSuper):
     def set_InvoiceRecipientIntermediatorAddress(self, InvoiceRecipientIntermediatorAddress): self.InvoiceRecipientIntermediatorAddress = InvoiceRecipientIntermediatorAddress
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
+        return value
     def validate_genericNMtokenType8_11(self, value):
         # Validate type genericNMtokenType8_11, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 8 <= value.__len__() <= 11 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 8..11 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 8 <= v.__len__() <= 11 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 8..11 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceRecipientAddress is not None or
@@ -6273,6 +7039,14 @@ class InvoiceRecipientDetailsType(GeneratedsSuper):
 
 
 class InvoiceRecipientPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceRecipientPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceRecipientDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceRecipientOrganisationTaxCode', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('InvoiceRecipientCode', 'PartyIdentifierType', 0),
+        MemberSpec_('InvoiceRecipientPostalAddressDetails', 'InvoiceRecipientPostalAddressDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceRecipientPartyIdentifier=None, InvoiceRecipientOrganisationName=None, InvoiceRecipientDepartment=None, InvoiceRecipientOrganisationTaxCode=None, InvoiceRecipientCode=None, InvoiceRecipientPostalAddressDetails=None):
@@ -6315,13 +7089,46 @@ class InvoiceRecipientPartyDetailsType(GeneratedsSuper):
     def set_InvoiceRecipientPostalAddressDetails(self, InvoiceRecipientPostalAddressDetails): self.InvoiceRecipientPostalAddressDetails = InvoiceRecipientPostalAddressDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_genericNMtokenType0_35(self, value):
         # Validate type genericNMtokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceRecipientPartyIdentifier is not None or
@@ -6465,6 +7272,14 @@ class InvoiceRecipientPartyDetailsType(GeneratedsSuper):
 
 
 class InvoiceRecipientPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceRecipientStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceRecipientTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceRecipientPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceRecipientStreetName=None, InvoiceRecipientTownName=None, InvoiceRecipientPostCodeIdentifier=None, CountryCode=None, CountryName=None, InvoiceRecipientPostOfficeBoxIdentifier=None):
@@ -6501,13 +7316,39 @@ class InvoiceRecipientPostalAddressDetailsType(GeneratedsSuper):
     def set_InvoiceRecipientPostOfficeBoxIdentifier(self, InvoiceRecipientPostOfficeBoxIdentifier): self.InvoiceRecipientPostOfficeBoxIdentifier = InvoiceRecipientPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceRecipientStreetName or
@@ -6640,6 +7481,80 @@ class InvoiceRecipientPostalAddressDetailsType(GeneratedsSuper):
 
 
 class InvoiceRowType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowSubIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ArticleGroupIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ArticleName', ['genericStringType0_100', 'xs:string'], 0),
+        MemberSpec_('ArticleInfoUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('BuyerArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('EanCode', ['genericTokenType0_35', 'xs:token'], 0),
+        MemberSpec_('RowRegistrationNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SerialNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowActionCode', ['genericTokenType0_35', 'xs:token'], 0),
+        MemberSpec_('RowDefinitionDetails', 'RowDefinitionDetailsType', 1),
+        MemberSpec_('OfferedQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('DeliveredQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('OrderedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('ConfirmedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('PostDeliveredQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('InvoicedQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('CreditRequestedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('ReturnedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('StartDate', 'date', 0),
+        MemberSpec_('EndDate', 'date', 0),
+        MemberSpec_('UnitPriceAmount', 'unitAmount', 0),
+        MemberSpec_('UnitPriceVatIncludedAmount', 'unitAmount', 0),
+        MemberSpec_('UnitPriceBaseQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('RowIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowOrderPositionIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowIdentifierDate', 'date', 0),
+        MemberSpec_('RowPositionIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('OriginalInvoiceNumber', ['genericStringType1_20', 'xs:string'], 0),
+        MemberSpec_('RowOrdererName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowSalesPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowOrderConfirmationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowOrderConfirmationDate', 'date', 0),
+        MemberSpec_('RowDeliveryIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDeliveryIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowDeliveryDate', 'date', 0),
+        MemberSpec_('RowQuotationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowQuotationIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowAgreementIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAgreementIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowRequestOfQuotationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowRequestOfQuotationIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowPriceListIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowPriceListIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('RowProjectReferenceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowOverDuePaymentDetails', 'RowOverDuePaymentDetailsType', 0),
+        MemberSpec_('RowAnyPartyDetails', 'RowAnyPartyDetailsType', 1),
+        MemberSpec_('RowDeliveryDetails', 'RowDeliveryDetailsType', 0),
+        MemberSpec_('RowShortProposedAccountIdentifier', ['genericNMtokenType0_4', 'xs:token'], 0),
+        MemberSpec_('RowNormalProposedAccountIdentifier', ['genericNMtokenType0_4', 'xs:token'], 0),
+        MemberSpec_('RowProposedAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAccountDimensionText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowSellerAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowFreeText', ['genericStringType0_512', 'xs:string'], 1),
+        MemberSpec_('RowUsedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('RowPreviousMeterReadingDate', 'date', 0),
+        MemberSpec_('RowLatestMeterReadingDate', 'date', 0),
+        MemberSpec_('RowCalculatedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('RowAveragePriceAmount', 'amount', 0),
+        MemberSpec_('RowDiscountPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('RowDiscountAmount', 'amount', 0),
+        MemberSpec_('RowDiscountTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDiscountTypeText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowProgressiveDiscountDetails', 'RowProgressiveDiscountDetailsType', 1),
+        MemberSpec_('RowVatRatePercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('RowVatCode', ['genericStringType0_10', 'xs:string'], 0),
+        MemberSpec_('RowVatAmount', 'amount', 0),
+        MemberSpec_('RowVatExcludedAmount', 'amount', 0),
+        MemberSpec_('RowAmount', 'amount', 0),
+        MemberSpec_('RowTransactionDetails', 'TransactionDetailsType', 0),
+        MemberSpec_('SubInvoiceRow', 'SubInvoiceRowType', 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowSubIdentifier=None, ArticleIdentifier=None, ArticleGroupIdentifier=None, ArticleName=None, ArticleInfoUrlText=None, BuyerArticleIdentifier=None, EanCode=None, RowRegistrationNumberIdentifier=None, SerialNumberIdentifier=None, RowActionCode=None, RowDefinitionDetails=None, OfferedQuantity=None, DeliveredQuantity=None, OrderedQuantity=None, ConfirmedQuantity=None, PostDeliveredQuantity=None, InvoicedQuantity=None, CreditRequestedQuantity=None, ReturnedQuantity=None, StartDate=None, EndDate=None, UnitPriceAmount=None, UnitPriceVatIncludedAmount=None, UnitPriceBaseQuantity=None, RowIdentifier=None, RowIdentifierUrlText=None, RowOrderPositionIdentifier=None, RowIdentifierDate=None, RowPositionIdentifier=None, OriginalInvoiceNumber=None, RowOrdererName=None, RowSalesPersonName=None, RowOrderConfirmationIdentifier=None, RowOrderConfirmationDate=None, RowDeliveryIdentifier=None, RowDeliveryIdentifierUrlText=None, RowDeliveryDate=None, RowQuotationIdentifier=None, RowQuotationIdentifierUrlText=None, RowAgreementIdentifier=None, RowAgreementIdentifierUrlText=None, RowRequestOfQuotationIdentifier=None, RowRequestOfQuotationIdentifierUrlText=None, RowPriceListIdentifier=None, RowPriceListIdentifierUrlText=None, RowProjectReferenceIdentifier=None, RowOverDuePaymentDetails=None, RowAnyPartyDetails=None, RowDeliveryDetails=None, RowShortProposedAccountIdentifier=None, RowNormalProposedAccountIdentifier=None, RowProposedAccountText=None, RowAccountDimensionText=None, RowSellerAccountText=None, RowFreeText=None, RowUsedQuantity=None, RowPreviousMeterReadingDate=None, RowLatestMeterReadingDate=None, RowCalculatedQuantity=None, RowAveragePriceAmount=None, RowDiscountPercent=None, RowDiscountAmount=None, RowDiscountTypeCode=None, RowDiscountTypeText=None, RowProgressiveDiscountDetails=None, RowVatRatePercent=None, RowVatCode=None, RowVatAmount=None, RowVatExcludedAmount=None, RowAmount=None, RowTransactionDetails=None, SubInvoiceRow=None):
@@ -6916,28 +7831,118 @@ class InvoiceRowType(GeneratedsSuper):
     def replace_SubInvoiceRow_at(self, index, value): self.SubInvoiceRow[index] = value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_100(self, value):
         # Validate type genericStringType0_100, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 100 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..100 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 100 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..100 characters' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_genericTokenType0_35(self, value):
         # Validate type genericTokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def validate_genericStringType1_20(self, value):
         # Validate type genericStringType1_20, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        return value
     def validate_genericNMtokenType0_4(self, value):
         # Validate type genericNMtokenType0_4, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 4 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..4 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 4 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..4 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType0_10(self, value):
         # Validate type genericStringType0_10, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 10 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..10 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 10 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..10 characters' )
+        return value
     def hasContent_(self):
         if (
             self.RowSubIdentifier is not None or
@@ -7972,6 +8977,12 @@ class InvoiceRowType(GeneratedsSuper):
 
 
 class InvoiceSenderPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('InvoiceSenderPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('InvoiceSenderOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('InvoiceSenderOrganisationTaxCode', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('InvoiceSenderCode', 'PartyIdentifierType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, InvoiceSenderPartyIdentifier=None, InvoiceSenderOrganisationName=None, InvoiceSenderOrganisationTaxCode=None, InvoiceSenderCode=None):
@@ -8002,13 +9013,46 @@ class InvoiceSenderPartyDetailsType(GeneratedsSuper):
     def set_InvoiceSenderCode(self, InvoiceSenderCode): self.InvoiceSenderCode = InvoiceSenderCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_genericNMtokenType0_35(self, value):
         # Validate type genericNMtokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.InvoiceSenderPartyIdentifier is not None or
@@ -8120,6 +9164,10 @@ class InvoiceSenderPartyDetailsType(GeneratedsSuper):
 
 
 class InvoiceTypeCodeType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('CodeListAgencyIdentifier', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['InvoiceTypeCodePattern', 'xs:NMTOKEN'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, CodeListAgencyIdentifier=None, valueOf_=None):
@@ -8201,6 +9249,18 @@ class InvoiceTypeCodeType(GeneratedsSuper):
 
 
 class PartialPaymentDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('PaidAmount', 'amount', 0),
+        MemberSpec_('PaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('UnPaidAmount', 'amount', 0),
+        MemberSpec_('UnPaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('InterestPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('ProsessingCostsAmount', 'amount', 0),
+        MemberSpec_('PartialPaymentVatIncludedAmount', 'amount', 1),
+        MemberSpec_('PartialPaymentVatExcludedAmount', 'amount', 1),
+        MemberSpec_('PartialPaymentDueDate', 'date', 1),
+        MemberSpec_('PartialPaymentReferenceIdentifier', ['genericStringType2_35', 'xs:string'], 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, PaidAmount=None, PaidVatExcludedAmount=None, UnPaidAmount=None, UnPaidVatExcludedAmount=None, InterestPercent=None, ProsessingCostsAmount=None, PartialPaymentVatIncludedAmount=None, PartialPaymentVatExcludedAmount=None, PartialPaymentDueDate=None, PartialPaymentReferenceIdentifier=None):
@@ -8267,10 +9327,33 @@ class PartialPaymentDetailsType(GeneratedsSuper):
     def replace_PartialPaymentReferenceIdentifier_at(self, index, value): self.PartialPaymentReferenceIdentifier[index] = value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.PaidAmount is not None or
@@ -8485,6 +9568,11 @@ class PartialPaymentDetailsType(GeneratedsSuper):
 
 
 class PaymentOverDueFineDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('PaymentOverDueFineFreeText', ['genericStringType0_70', 'xs:string'], 1),
+        MemberSpec_('PaymentOverDueFinePercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('PaymentOverDueFixedAmount', 'amount', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, PaymentOverDueFineFreeText=None, PaymentOverDueFinePercent=None, PaymentOverDueFixedAmount=None):
@@ -8512,10 +9600,33 @@ class PaymentOverDueFineDetailsType(GeneratedsSuper):
     def set_PaymentOverDueFixedAmount(self, PaymentOverDueFixedAmount): self.PaymentOverDueFixedAmount = PaymentOverDueFixedAmount
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def hasContent_(self):
         if (
             self.PaymentOverDueFineFreeText or
@@ -8614,6 +9725,10 @@ class PaymentOverDueFineDetailsType(GeneratedsSuper):
 
 
 class PaymentStatusDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('PaymentStatusCode', ['PaymentStatusCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('PaymentMethodText', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, PaymentStatusCode=None, PaymentMethodText=None):
@@ -8632,10 +9747,23 @@ class PaymentStatusDetailsType(GeneratedsSuper):
     def set_PaymentMethodText(self, PaymentMethodText): self.PaymentMethodText = PaymentMethodText
     def validate_PaymentStatusCodeType(self, value):
         # Validate type PaymentStatusCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( value != "PAID" and value != "NOTPAID" and value != "PARTLYPAID" ):
+            raise_value_error( value, 'Expected "PAID", "NOTPAID" or "PARTLYPAID"' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.PaymentStatusCode is not None or
@@ -8714,6 +9842,18 @@ class PaymentStatusDetailsType(GeneratedsSuper):
 
 
 class PaymentTermsDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('PaymentTermsFreeText', ['genericStringType0_70', 'xs:string'], 1),
+        MemberSpec_('InvoiceDueDate', 'date', 0),
+        MemberSpec_('CashDiscountDate', 'date', 0),
+        MemberSpec_('CashDiscountBaseAmount', 'amount', 0),
+        MemberSpec_('CashDiscountPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('CashDiscountAmount', 'amount', 0),
+        MemberSpec_('CashDiscountExcludingVatAmount', 'amount', 0),
+        MemberSpec_('CashDiscountVatDetails', 'CashDiscountVatDetailsType', 1),
+        MemberSpec_('ReducedInvoiceVatIncludedAmount', 'amount', 0),
+        MemberSpec_('PaymentOverDueFineDetails', 'PaymentOverDueFineDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, PaymentTermsFreeText=None, InvoiceDueDate=None, CashDiscountDate=None, CashDiscountBaseAmount=None, CashDiscountPercent=None, CashDiscountAmount=None, CashDiscountExcludingVatAmount=None, CashDiscountVatDetails=None, ReducedInvoiceVatIncludedAmount=None, PaymentOverDueFineDetails=None):
@@ -8768,10 +9908,33 @@ class PaymentTermsDetailsType(GeneratedsSuper):
     def set_PaymentOverDueFineDetails(self, PaymentOverDueFineDetails): self.PaymentOverDueFineDetails = PaymentOverDueFineDetails
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def hasContent_(self):
         if (
             self.PaymentTermsFreeText or
@@ -8974,6 +10137,35 @@ class PaymentTermsDetailsType(GeneratedsSuper):
 
 
 class RowDeliveryDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowTerminalAddressText', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('RowWaybillIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowWaybillTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowClearanceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDeliveryNoteIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDelivererIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDelivererName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('RowDelivererCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('RowDelivererCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowModeOfTransportIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowCarrierName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowVesselName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowLocationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowTransportInformationDate', 'date', 0),
+        MemberSpec_('RowCountryOfOrigin', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowCountryOfDestinationName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDestinationCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('RowPlaceOfDischarge', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowFinalDestinationName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('RowCustomsInfo', 'CustomsInfoType', 0),
+        MemberSpec_('RowManufacturerArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowManufacturerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowManufacturerName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('RowManufacturerCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('RowManufacturerCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowManufacturerOrderIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowPackageDetails', 'RowPackageDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowTerminalAddressText=None, RowWaybillIdentifier=None, RowWaybillTypeCode=None, RowClearanceIdentifier=None, RowDeliveryNoteIdentifier=None, RowDelivererIdentifier=None, RowDelivererName=None, RowDelivererCountryCode=None, RowDelivererCountryName=None, RowModeOfTransportIdentifier=None, RowCarrierName=None, RowVesselName=None, RowLocationIdentifier=None, RowTransportInformationDate=None, RowCountryOfOrigin=None, RowCountryOfDestinationName=None, RowDestinationCountryCode=None, RowPlaceOfDischarge=None, RowFinalDestinationName=None, RowCustomsInfo=None, RowManufacturerArticleIdentifier=None, RowManufacturerIdentifier=None, RowManufacturerName=None, RowManufacturerCountryCode=None, RowManufacturerCountryName=None, RowManufacturerOrderIdentifier=None, RowPackageDetails=None):
@@ -9085,13 +10277,39 @@ class RowDeliveryDetailsType(GeneratedsSuper):
     def set_RowPackageDetails(self, RowPackageDetails): self.RowPackageDetails = RowPackageDetails
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def hasContent_(self):
         if (
             self.RowTerminalAddressText is not None or
@@ -9494,6 +10712,10 @@ class RowDeliveryDetailsType(GeneratedsSuper):
 
 
 class SellerAccountDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerAccountID', 'SellerAccountIDType', 0),
+        MemberSpec_('SellerBic', 'SellerBicType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerAccountID=None, SellerBic=None):
@@ -9592,6 +10814,10 @@ class SellerAccountDetailsType(GeneratedsSuper):
 
 
 class SellerAccountIDType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['genericNMtokenType2_35', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -9669,10 +10895,45 @@ class SellerAccountIDType(GeneratedsSuper):
             self.IdentificationSchemeName = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and value.__len__() <= 35 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected less than 35 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "IBAN" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "IBAN"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerAccountIDType
 
 
 class SellerBicType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentificationSchemeName', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['genericNMtokenType8_11', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentificationSchemeName=None, valueOf_=None):
@@ -9750,10 +11011,45 @@ class SellerBicType(GeneratedsSuper):
             self.IdentificationSchemeName = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        if ( isinstance( value, basestring ) and 8 <= value.__len__() <= 11 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected value between 8..11 characters' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_IdentificationSchemeName(self, value):
+        if ( value == "BIC" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "BIC"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('IdentificationSchemeName', node)
+        if value is not None and 'IdentificationSchemeName' not in already_processed:
+            already_processed.add('IdentificationSchemeName')
+            self.IdentificationSchemeName = value
+            self.validate_IdentificationSchemeName(self.IdentificationSchemeName)
+        value = find_attr_value_('xsi:type', node)
+        if value is not None and 'xsi:type' not in already_processed:
+            already_processed.add('xsi:type')
+            self.extensiontype_ = value
 # end class SellerBicType
 
 
 class SellerCommunicationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerPhoneNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerEmailaddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerPhoneNumberIdentifier=None, SellerEmailaddressIdentifier=None):
@@ -9772,10 +11068,32 @@ class SellerCommunicationDetailsType(GeneratedsSuper):
     def set_SellerEmailaddressIdentifier(self, SellerEmailaddressIdentifier): self.SellerEmailaddressIdentifier = SellerEmailaddressIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerPhoneNumberIdentifier is not None or
@@ -9854,6 +11172,20 @@ class SellerCommunicationDetailsType(GeneratedsSuper):
 
 
 class SellerInformationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerOfficialPostalAddressDetails', 'SellerOfficialPostalAddressDetailsType', 0),
+        MemberSpec_('SellerHomeTownName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerVatRegistrationText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerVatRegistrationDate', 'date', 0),
+        MemberSpec_('SellerTaxRegistrationText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerPhoneNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerFaxNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerCommonEmailaddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('SellerWebaddressIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerFreeText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SellerAccountDetails', 'SellerAccountDetailsType', 1),
+        MemberSpec_('InvoiceRecipientDetails', 'InvoiceRecipientDetailsType', 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerOfficialPostalAddressDetails=None, SellerHomeTownName=None, SellerVatRegistrationText=None, SellerVatRegistrationDate=None, SellerTaxRegistrationText=None, SellerPhoneNumber=None, SellerFaxNumber=None, SellerCommonEmailaddressIdentifier=None, SellerWebaddressIdentifier=None, SellerFreeText=None, SellerAccountDetails=None, InvoiceRecipientDetails=None):
@@ -9914,13 +11246,46 @@ class SellerInformationDetailsType(GeneratedsSuper):
     def replace_InvoiceRecipientDetails_at(self, index, value): self.InvoiceRecipientDetails[index] = value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerOfficialPostalAddressDetails is not None or
@@ -10139,6 +11504,16 @@ class SellerInformationDetailsType(GeneratedsSuper):
 
 
 class SellerPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerPartyIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SellerOrganisationName', ['genericStringType2_70', 'xs:string'], 1),
+        MemberSpec_('SellerOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SellerOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerOrganisationTaxCodeUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SellerCode', 'PartyIdentifierType', 0),
+        MemberSpec_('SellerPostalAddressDetails', 'SellerPostalAddressDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerPartyIdentifier=None, SellerPartyIdentifierUrlText=None, SellerOrganisationName=None, SellerOrganisationDepartment=None, SellerOrganisationTaxCode=None, SellerOrganisationTaxCodeUrlText=None, SellerCode=None, SellerPostalAddressDetails=None):
@@ -10187,13 +11562,46 @@ class SellerPartyDetailsType(GeneratedsSuper):
     def set_SellerPostalAddressDetails(self, SellerPostalAddressDetails): self.SellerPostalAddressDetails = SellerPostalAddressDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_genericStringType2_70(self, value):
         # Validate type genericStringType2_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerPartyIdentifier is not None or
@@ -10356,10 +11764,64 @@ class SellerPartyDetailsType(GeneratedsSuper):
             obj_.build(child_)
             self.SellerPostalAddressDetails = obj_
             obj_.original_tagname_ = 'SellerPostalAddressDetails'
+    def validate_SellerOrganisationNamesType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def validate_SellerOrganisationNamesType(self, value):
+        if ( value.__len__() <= 3 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def validate_SellerOrganisationBankName(self, value):
+        if ( value.__len__() <= 2 ):
+            pass
+        else:
+            raise_value_error( value.__len__(), 'Expected maximum of 3 elements' )
+        return value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'SellerPartyIdentifier':
+            SellerPartyIdentifier_ = child_.text
+            SellerPartyIdentifier_ = self.gds_validate_string(SellerPartyIdentifier_, node, 'SellerPartyIdentifier')
+            self.SellerPartyIdentifier = SellerPartyIdentifier_
+            self.validate_genericStringType1_48(self.SellerPartyIdentifier)    # validate type genericStringType1_48
+        elif nodeName_ == 'SellerOrganisationNames':
+            obj_ = SellerOrganisationNamesType.factory()
+            obj_.build(child_)
+            self.SellerOrganisationNames.append(obj_)
+            self.validate_SellerOrganisationNamesType(self.SellerOrganisationNames)
+            obj_.original_tagname_ = 'SellerOrganisationNames'
+        elif nodeName_ == 'SellerOrganisationBankName':
+            SellerOrganisationBankName_ = child_.text
+            SellerOrganisationBankName_ = self.gds_validate_string(SellerOrganisationBankName_, node, 'SellerOrganisationBankName')
+            self.SellerOrganisationBankName.append(SellerOrganisationBankName_)
+            self.validate_genericStringType1_35(self.SellerOrganisationBankName)    # validate type genericStringType1_35
+            self.validate_SellerOrganisationBankName(self.SellerOrganisationBankName)
+        elif nodeName_ == 'SellerPostalAddressDetails':
+            obj_ = SellerPostalAddressDetailsType.factory()
+            obj_.build(child_)
+            self.SellerPostalAddressDetails = obj_
+            obj_.original_tagname_ = 'SellerPostalAddressDetails'
+        elif nodeName_ == 'IndustryCode':
+            IndustryCode_ = child_.text
+            IndustryCode_ = self.gds_validate_string(IndustryCode_, node, 'IndustryCode')
+            self.IndustryCode = IndustryCode_
+            self.validate_genericStringType0_6(self.IndustryCode)    # validate type genericStringType0_6
 # end class SellerPartyDetailsType
 
 
 class SellerPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('SellerTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SellerPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerStreetName=None, SellerTownName=None, SellerPostCodeIdentifier=None, CountryCode=None, CountryName=None, SellerPostOfficeBoxIdentifier=None):
@@ -10396,13 +11858,39 @@ class SellerPostalAddressDetailsType(GeneratedsSuper):
     def set_SellerPostOfficeBoxIdentifier(self, SellerPostOfficeBoxIdentifier): self.SellerPostOfficeBoxIdentifier = SellerPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerStreetName or
@@ -10535,6 +12023,10 @@ class SellerPostalAddressDetailsType(GeneratedsSuper):
 
 
 class AnyPartyCommunicationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AnyPartyPhoneNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyEmailAddressIdentifier', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AnyPartyPhoneNumberIdentifier=None, AnyPartyEmailAddressIdentifier=None):
@@ -10553,10 +12045,32 @@ class AnyPartyCommunicationDetailsType(GeneratedsSuper):
     def set_AnyPartyEmailAddressIdentifier(self, AnyPartyEmailAddressIdentifier): self.AnyPartyEmailAddressIdentifier = AnyPartyEmailAddressIdentifier
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.AnyPartyPhoneNumberIdentifier is not None or
@@ -10635,6 +12149,10 @@ class AnyPartyCommunicationDetailsType(GeneratedsSuper):
 
 
 class SpecificationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SpecificationFreeText', ['genericStringType0_80', 'xs:string'], 1),
+        MemberSpec_('ExternalSpecificationDetails', 'ExternalSpecificationDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SpecificationFreeText=None, ExternalSpecificationDetails=None):
@@ -10659,7 +12177,18 @@ class SpecificationDetailsType(GeneratedsSuper):
     def set_ExternalSpecificationDetails(self, ExternalSpecificationDetails): self.ExternalSpecificationDetails = ExternalSpecificationDetails
     def validate_genericStringType0_80(self, value):
         # Validate type genericStringType0_80, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 80 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..80 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 80 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..80 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SpecificationFreeText or
@@ -10746,6 +12275,9 @@ class SpecificationDetailsType(GeneratedsSuper):
 
 
 class ExternalSpecificationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('', 'xs:string', 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, anytypeobjs_=None):
@@ -10832,6 +12364,78 @@ class ExternalSpecificationDetailsType(GeneratedsSuper):
 
 
 class SubInvoiceRowType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowPositionIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubArticleGroupIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubArticleName', ['genericStringType0_100', 'xs:string'], 0),
+        MemberSpec_('SubArticleInfoUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubBuyerArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubEanCode', ['genericTokenType0_35', 'xs:token'], 0),
+        MemberSpec_('SubRowRegistrationNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubSerialNumberIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowActionCode', ['genericTokenType0_35', 'xs:token'], 0),
+        MemberSpec_('SubRowDefinitionDetails', 'SubRowDefinitionDetailsType', 1),
+        MemberSpec_('SubOfferedQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('SubDeliveredQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('SubOrderedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubConfirmedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubPostDeliveredQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubInvoicedQuantity', 'QuantityType0_14', 1),
+        MemberSpec_('SubCreditRequestedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubReturnedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubStartDate', 'date', 0),
+        MemberSpec_('SubEndDate', 'date', 0),
+        MemberSpec_('SubUnitPriceAmount', 'unitAmount', 0),
+        MemberSpec_('SubUnitPriceVatIncludedAmount', 'unitAmount', 0),
+        MemberSpec_('SubUnitPriceBaseQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowIdentifierDate', 'date', 0),
+        MemberSpec_('SubRowOrdererName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowSalesPersonName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowOrderConfirmationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowOrderConfirmationDate', 'date', 0),
+        MemberSpec_('SubOriginalInvoiceNumber', ['genericStringType1_20', 'xs:string'], 0),
+        MemberSpec_('SubRowDeliveryIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDeliveryIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowDeliveryDate', 'date', 0),
+        MemberSpec_('SubRowQuotationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowQuotationIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowAgreementIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAgreementIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowRequestOfQuotationIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowRequestOfQuotationIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowPriceListIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowPriceListIdentifierUrlText', ['genericStringType0_512', 'xs:string'], 0),
+        MemberSpec_('SubRowProjectReferenceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowOverDuePaymentDetails', 'SubRowOverDuePaymentDetailsType', 0),
+        MemberSpec_('SubRowAnyPartyDetails', 'SubRowAnyPartyDetailsType', 1),
+        MemberSpec_('SubRowDeliveryDetails', 'SubRowDeliveryDetailsType', 0),
+        MemberSpec_('SubRowShortProposedAccountIdentifier', ['genericStringType0_4', 'xs:string'], 0),
+        MemberSpec_('SubRowNormalProposedAccountIdentifier', ['genericStringType0_4', 'xs:string'], 0),
+        MemberSpec_('SubRowProposedAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAccountDimensionText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowSellerAccountText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowFreeText', ['genericStringType0_512', 'xs:string'], 1),
+        MemberSpec_('SubRowUsedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPreviousMeterReadingDate', 'date', 0),
+        MemberSpec_('SubRowLatestMeterReadingDate', 'date', 0),
+        MemberSpec_('SubRowCalculatedQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowAveragePriceAmount', 'amount', 0),
+        MemberSpec_('SubRowDiscountPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('SubRowDiscountAmount', 'amount', 0),
+        MemberSpec_('SubRowDiscountTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDiscountTypeText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowProgressiveDiscountDetails', 'SubRowProgressiveDiscountDetailsType', 1),
+        MemberSpec_('SubRowVatRatePercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('SubRowVatCode', ['genericStringType0_10', 'xs:string'], 0),
+        MemberSpec_('SubRowVatAmount', 'amount', 0),
+        MemberSpec_('SubRowVatExcludedAmount', 'amount', 0),
+        MemberSpec_('SubRowAmount', 'amount', 0),
+        MemberSpec_('SubRowTransactionDetails', 'TransactionDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubIdentifier=None, SubRowPositionIdentifier=None, SubArticleIdentifier=None, SubArticleGroupIdentifier=None, SubArticleName=None, SubArticleInfoUrlText=None, SubBuyerArticleIdentifier=None, SubEanCode=None, SubRowRegistrationNumberIdentifier=None, SubSerialNumberIdentifier=None, SubRowActionCode=None, SubRowDefinitionDetails=None, SubOfferedQuantity=None, SubDeliveredQuantity=None, SubOrderedQuantity=None, SubConfirmedQuantity=None, SubPostDeliveredQuantity=None, SubInvoicedQuantity=None, SubCreditRequestedQuantity=None, SubReturnedQuantity=None, SubStartDate=None, SubEndDate=None, SubUnitPriceAmount=None, SubUnitPriceVatIncludedAmount=None, SubUnitPriceBaseQuantity=None, SubRowIdentifier=None, SubRowIdentifierUrlText=None, SubRowIdentifierDate=None, SubRowOrdererName=None, SubRowSalesPersonName=None, SubRowOrderConfirmationIdentifier=None, SubRowOrderConfirmationDate=None, SubOriginalInvoiceNumber=None, SubRowDeliveryIdentifier=None, SubRowDeliveryIdentifierUrlText=None, SubRowDeliveryDate=None, SubRowQuotationIdentifier=None, SubRowQuotationIdentifierUrlText=None, SubRowAgreementIdentifier=None, SubRowAgreementIdentifierUrlText=None, SubRowRequestOfQuotationIdentifier=None, SubRowRequestOfQuotationIdentifierUrlText=None, SubRowPriceListIdentifier=None, SubRowPriceListIdentifierUrlText=None, SubRowProjectReferenceIdentifier=None, SubRowOverDuePaymentDetails=None, SubRowAnyPartyDetails=None, SubRowDeliveryDetails=None, SubRowShortProposedAccountIdentifier=None, SubRowNormalProposedAccountIdentifier=None, SubRowProposedAccountText=None, SubRowAccountDimensionText=None, SubRowSellerAccountText=None, SubRowFreeText=None, SubRowUsedQuantity=None, SubRowPreviousMeterReadingDate=None, SubRowLatestMeterReadingDate=None, SubRowCalculatedQuantity=None, SubRowAveragePriceAmount=None, SubRowDiscountPercent=None, SubRowDiscountAmount=None, SubRowDiscountTypeCode=None, SubRowDiscountTypeText=None, SubRowProgressiveDiscountDetails=None, SubRowVatRatePercent=None, SubRowVatCode=None, SubRowVatAmount=None, SubRowVatExcludedAmount=None, SubRowAmount=None, SubRowTransactionDetails=None):
@@ -11096,28 +12700,118 @@ class SubInvoiceRowType(GeneratedsSuper):
     def set_SubRowTransactionDetails(self, SubRowTransactionDetails): self.SubRowTransactionDetails = SubRowTransactionDetails
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType0_100(self, value):
         # Validate type genericStringType0_100, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 100 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..100 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 100 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..100 characters' )
+        return value
     def validate_genericStringType0_512(self, value):
         # Validate type genericStringType0_512, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 512 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..512 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 512 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..512 characters' )
+        return value
     def validate_genericTokenType0_35(self, value):
         # Validate type genericTokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def validate_genericStringType1_20(self, value):
         # Validate type genericStringType1_20, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        return value
     def validate_genericStringType0_4(self, value):
         # Validate type genericStringType0_4, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 4 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..4 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 4 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..4 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType0_10(self, value):
         # Validate type genericStringType0_10, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 10 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..10 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 10 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..10 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SubIdentifier is not None or
@@ -12118,6 +13812,27 @@ class SubInvoiceRowType(GeneratedsSuper):
 
 
 class SubRowDeliveryDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowTerminalAddressText', ['genericStringType0_70', 'xs:string'], 0),
+        MemberSpec_('SubRowWaybillIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowWaybillTypeCode', ['genericNMtokenType0_35', 'xs:token'], 0),
+        MemberSpec_('SubRowClearanceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDeliveryNoteIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDelivererIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDelivererName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SubRowDelivererCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('SubRowDelivererCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowPlaceOfDischarge', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowFinalDestinationName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SubRowCustomsInfo', 'CustomsInfoType', 0),
+        MemberSpec_('SubRowManufacturerArticleIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowManufacturerIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowManufacturerName', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SubRowManufacturerCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('SubRowManufacturerCountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowManufacturerOrderIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowPackageDetails', 'SubRowPackageDetailsType', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowTerminalAddressText=None, SubRowWaybillIdentifier=None, SubRowWaybillTypeCode=None, SubRowClearanceIdentifier=None, SubRowDeliveryNoteIdentifier=None, SubRowDelivererIdentifier=None, SubRowDelivererName=None, SubRowDelivererCountryCode=None, SubRowDelivererCountryName=None, SubRowPlaceOfDischarge=None, SubRowFinalDestinationName=None, SubRowCustomsInfo=None, SubRowManufacturerArticleIdentifier=None, SubRowManufacturerIdentifier=None, SubRowManufacturerName=None, SubRowManufacturerCountryCode=None, SubRowManufacturerCountryName=None, SubRowManufacturerOrderIdentifier=None, SubRowPackageDetails=None):
@@ -12205,16 +13920,53 @@ class SubRowDeliveryDetailsType(GeneratedsSuper):
     def set_SubRowPackageDetails(self, SubRowPackageDetails): self.SubRowPackageDetails = SubRowPackageDetails
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericNMtokenType0_35(self, value):
         # Validate type genericNMtokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def hasContent_(self):
         if (
             self.SubRowTerminalAddressText is not None or
@@ -12520,6 +14272,13 @@ class SubRowDeliveryDetailsType(GeneratedsSuper):
 
 
 class VatSpecificationDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('VatBaseAmount', 'amount', 0),
+        MemberSpec_('VatRatePercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('VatCode', ['genericStringType0_10', 'xs:string'], 0),
+        MemberSpec_('VatRateAmount', 'amount', 0),
+        MemberSpec_('VatFreeText', ['genericStringType0_70', 'xs:string'], 1),
+    ]
     subclass = None
     superclass = None
     def __init__(self, VatBaseAmount=None, VatRatePercent=None, VatCode=None, VatRateAmount=None, VatFreeText=None):
@@ -12553,13 +14312,47 @@ class VatSpecificationDetailsType(GeneratedsSuper):
     def replace_VatFreeText_at(self, index, value): self.VatFreeText[index] = value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType0_10(self, value):
         # Validate type genericStringType0_10, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 10 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..10 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 10 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..10 characters' )
+        return value
     def validate_genericStringType0_70(self, value):
         # Validate type genericStringType0_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..70 characters' )
+        return value
     def hasContent_(self):
         if (
             self.VatBaseAmount is not None or
@@ -12684,6 +14477,10 @@ class VatSpecificationDetailsType(GeneratedsSuper):
 
 
 class PartyIdentifierType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('IdentifierType', 'xs:token', 0),
+        MemberSpec_('valueOf_', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, IdentifierType=None, valueOf_=None):
@@ -12766,6 +14563,11 @@ class PartyIdentifierType(GeneratedsSuper):
 
 
 class DiscountDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('FreeText', ['genericStringType1_70', 'xs:string'], 0),
+        MemberSpec_('Percent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('Amount', 'amount', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, FreeText=None, Percent=None, Amount=None):
@@ -12787,10 +14589,33 @@ class DiscountDetailsType(GeneratedsSuper):
     def set_Amount(self, Amount): self.Amount = Amount
     def validate_genericStringType1_70(self, value):
         # Validate type genericStringType1_70, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 70 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..70 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 70 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..70 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def hasContent_(self):
         if (
             self.FreeText is not None or
@@ -12883,6 +14708,12 @@ class DiscountDetailsType(GeneratedsSuper):
 
 
 class CustomsInfoType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('CNCode', ['genericStringType1_8', 'xs:string'], 0),
+        MemberSpec_('CNName', ['genericStringType1_35', 'xs:string'], 0),
+        MemberSpec_('CNOriginCountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CNOriginCountryName', ['genericStringType1_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, CNCode=None, CNName=None, CNOriginCountryCode=None, CNOriginCountryName=None):
@@ -12907,13 +14738,39 @@ class CustomsInfoType(GeneratedsSuper):
     def set_CNOriginCountryName(self, CNOriginCountryName): self.CNOriginCountryName = CNOriginCountryName
     def validate_genericStringType1_8(self, value):
         # Validate type genericStringType1_8, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 8 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..8 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 8 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..8 characters' )
+        return value
     def validate_genericStringType1_35(self, value):
         # Validate type genericStringType1_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def hasContent_(self):
         if (
             self.CNCode is not None or
@@ -13016,6 +14873,11 @@ class CustomsInfoType(GeneratedsSuper):
 
 
 class TransactionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('OtherCurrencyAmount', 'amount', 0),
+        MemberSpec_('ExchangeRate', ['exchangeRate', 'xs:string'], 0),
+        MemberSpec_('ExchangeDate', 'date', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, OtherCurrencyAmount=None, ExchangeRate=None, ExchangeDate=None):
@@ -13037,7 +14899,19 @@ class TransactionDetailsType(GeneratedsSuper):
     def set_ExchangeDate(self, ExchangeDate): self.ExchangeDate = ExchangeDate
     def validate_exchangeRate(self, value):
         # Validate type exchangeRate, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[0-9]{1,15}(,[0-9]{1,6})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [0-9]{1,15}(,[0-9]{1,6})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[0-9]{1,15}(,[0-9]{1,6})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [0-9]{1,15}(,[0-9]{1,6})?' )
+        return value
     def hasContent_(self):
         if (
             self.OtherCurrencyAmount is not None or
@@ -13132,6 +15006,9 @@ class TransactionDetailsType(GeneratedsSuper):
 
 
 class AttachmentMessageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AttachmentMessageIdentifier', ['genericStringType15_61', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AttachmentMessageIdentifier=None):
@@ -13147,7 +15024,18 @@ class AttachmentMessageDetailsType(GeneratedsSuper):
     def set_AttachmentMessageIdentifier(self, AttachmentMessageIdentifier): self.AttachmentMessageIdentifier = AttachmentMessageIdentifier
     def validate_genericStringType15_61(self, value):
         # Validate type genericStringType15_61, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 15 <= value.__len__() <= 61 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 15..61 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 15 <= v.__len__() <= 61 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 15..61 characters' )
+        return value
     def hasContent_(self):
         if (
             self.AttachmentMessageIdentifier is not None
@@ -13214,6 +15102,10 @@ class AttachmentMessageDetailsType(GeneratedsSuper):
 
 
 class QuantityType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('QuantityUnitCode', 'genericTokenType0_14', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, QuantityUnitCode=None, valueOf_=None, extensiontype_=None):
@@ -13235,7 +15127,19 @@ class QuantityType(GeneratedsSuper):
     def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
     def validate_genericTokenType0_14(self, value):
         # Validate type genericTokenType0_14, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 14 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..14 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 14 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..14 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.valueOf_
@@ -13311,6 +15215,9 @@ class QuantityType(GeneratedsSuper):
 
 
 class QuantityType0_14(QuantityType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'QuantityType', 0),
+    ]
     subclass = None
     superclass = QuantityType
     def __init__(self, QuantityUnitCode=None, valueOf_=None):
@@ -13385,6 +15292,9 @@ class QuantityType0_14(QuantityType):
 
 
 class QuantityType0_70(QuantityType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'QuantityType', 0),
+    ]
     subclass = None
     superclass = QuantityType
     def __init__(self, QuantityUnitCode=None, valueOf_=None):
@@ -13459,6 +15369,10 @@ class QuantityType0_70(QuantityType):
 
 
 class AnyPartyTextType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AnyPartyCode', 'genericTokenType0_35', 0),
+        MemberSpec_('valueOf_', 'xs:string', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AnyPartyCode=None, valueOf_=None, extensiontype_=None):
@@ -13480,7 +15394,19 @@ class AnyPartyTextType(GeneratedsSuper):
     def set_extensiontype_(self, extensiontype_): self.extensiontype_ = extensiontype_
     def validate_genericTokenType0_35(self, value):
         # Validate type genericTokenType0_35, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.valueOf_
@@ -13556,6 +15482,9 @@ class AnyPartyTextType(GeneratedsSuper):
 
 
 class anypartytexttype0_35(AnyPartyTextType):
+    member_data_items_ = [
+        MemberSpec_('valueOf_', 'AnyPartyTextType', 0),
+    ]
     subclass = None
     superclass = AnyPartyTextType
     def __init__(self, AnyPartyCode=None, valueOf_=None):
@@ -13630,6 +15559,10 @@ class anypartytexttype0_35(AnyPartyTextType):
 
 
 class date(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('Format', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['dateType', 'xs:integer'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, Format=None, valueOf_=None):
@@ -13707,10 +15640,42 @@ class date(GeneratedsSuper):
             self.Format = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
+    def validate_valueOf_(self, value):
+        import datetime
+        if ( datetime.datetime.strptime( value, '%Y%m%d' ).strftime( '%Y%m%d' ) == value ):
+            pass
+        else:
+            raise_value_error( value, 'Time format does not match' )
+        return value
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        self.validate_valueOf_(self.valueOf_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def validate_Format(self, value):
+        if ( value == "CCYYMMDD" ):
+            pass
+        else:
+            raise_value_error( value, 'Expected "CCYYMMDD"' )
+        return value
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('Format', node)
+        if value is not None and 'Format' not in already_processed:
+            already_processed.add('Format')
+            self.Format = value
+            self.validate_Format(self.Format)
 # end class date
 
 
 class amount(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AmountCurrencyIdentifier', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['monetaryAmount', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AmountCurrencyIdentifier=None, valueOf_=None):
@@ -13792,6 +15757,10 @@ class amount(GeneratedsSuper):
 
 
 class epiAmount(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AmountCurrencyIdentifier', 'xs:NMTOKEN', 0),
+        MemberSpec_('valueOf_', ['epiMonetaryAmount', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AmountCurrencyIdentifier=None, valueOf_=None):
@@ -13873,6 +15842,11 @@ class epiAmount(GeneratedsSuper):
 
 
 class unitAmount(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AmountCurrencyIdentifier', 'xs:NMTOKEN', 0),
+        MemberSpec_('UnitPriceUnitCode', 'genericStringType0_14', 0),
+        MemberSpec_('valueOf_', ['unitAmountType', 'xs:token'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AmountCurrencyIdentifier=None, UnitPriceUnitCode=None, valueOf_=None):
@@ -13894,7 +15868,18 @@ class unitAmount(GeneratedsSuper):
     def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
     def validate_genericStringType0_14(self, value):
         # Validate type genericStringType0_14, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 14 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..14 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 14 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..14 characters' )
+        return value
     def hasContent_(self):
         if (
             self.valueOf_
@@ -13972,6 +15957,10 @@ class unitAmount(GeneratedsSuper):
 
 
 class MessageSenderDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('FromIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('FromIntermediator', ['genericStringType2_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, FromIdentifier=None, FromIntermediator=None):
@@ -13990,7 +15979,18 @@ class MessageSenderDetailsType(GeneratedsSuper):
     def set_FromIntermediator(self, FromIntermediator): self.FromIntermediator = FromIntermediator
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.FromIdentifier is not None or
@@ -14069,6 +16069,10 @@ class MessageSenderDetailsType(GeneratedsSuper):
 
 
 class MessageReceiverDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('ToIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('ToIntermediator', ['genericStringType2_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, ToIdentifier=None, ToIntermediator=None):
@@ -14087,7 +16091,18 @@ class MessageReceiverDetailsType(GeneratedsSuper):
     def set_ToIntermediator(self, ToIntermediator): self.ToIntermediator = ToIntermediator
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.ToIdentifier is not None or
@@ -14166,6 +16181,12 @@ class MessageReceiverDetailsType(GeneratedsSuper):
 
 
 class MessageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('MessageIdentifier', ['genericStringType2_48', 'xs:string'], 0),
+        MemberSpec_('MessageTimeStamp', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('RefToMessageIdentifier', ['genericStringType0_48', 'xs:string'], 0),
+        MemberSpec_('ImplementationCode', ['genericStringType0_4', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, MessageIdentifier=None, MessageTimeStamp=None, RefToMessageIdentifier=None, ImplementationCode=None):
@@ -14190,16 +16211,60 @@ class MessageDetailsType(GeneratedsSuper):
     def set_ImplementationCode(self, ImplementationCode): self.ImplementationCode = ImplementationCode
     def validate_genericStringType2_48(self, value):
         # Validate type genericStringType2_48, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 48 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..48 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 48 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..48 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_genericStringType0_48(self, value):
         # Validate type genericStringType0_48, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 48 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..48 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 48 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..48 characters' )
+        return value
     def validate_genericStringType0_4(self, value):
         # Validate type genericStringType0_4, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 4 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..4 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 4 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..4 characters' )
+        return value
     def hasContent_(self):
         if (
             self.MessageIdentifier is not None or
@@ -14302,6 +16367,14 @@ class MessageDetailsType(GeneratedsSuper):
 
 
 class AnyPartyPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('AnyPartyStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('AnyPartyTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('AnyPartyPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, AnyPartyStreetName=None, AnyPartyTownName=None, AnyPartyPostCodeIdentifier=None, CountryCode=None, CountryName=None, AnyPartyPostOfficeBoxIdentifier=None):
@@ -14338,13 +16411,39 @@ class AnyPartyPostalAddressDetailsType(GeneratedsSuper):
     def set_AnyPartyPostOfficeBoxIdentifier(self, AnyPartyPostOfficeBoxIdentifier): self.AnyPartyPostOfficeBoxIdentifier = AnyPartyPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.AnyPartyStreetName or
@@ -14477,6 +16576,14 @@ class AnyPartyPostalAddressDetailsType(GeneratedsSuper):
 
 
 class FactoringPartyPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('FactoringPartyStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('FactoringPartyTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('FactoringPartyPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('FactoringPartyPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, FactoringPartyStreetName=None, FactoringPartyTownName=None, FactoringPartyPostCodeIdentifier=None, CountryCode=None, CountryName=None, FactoringPartyPostOfficeBoxIdentifier=None):
@@ -14513,13 +16620,39 @@ class FactoringPartyPostalAddressDetailsType(GeneratedsSuper):
     def set_FactoringPartyPostOfficeBoxIdentifier(self, FactoringPartyPostOfficeBoxIdentifier): self.FactoringPartyPostOfficeBoxIdentifier = FactoringPartyPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.FactoringPartyStreetName or
@@ -14652,6 +16785,15 @@ class FactoringPartyPostalAddressDetailsType(GeneratedsSuper):
 
 
 class ShipmentPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('ShipmentPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ShipmentOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('ShipmentOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('ShipmentOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ShipmentCode', 'PartyIdentifierType', 0),
+        MemberSpec_('ShipmentPostalAddressDetails', 'ShipmentPostalAddressDetailsType', 0),
+        MemberSpec_('ShipmentSiteCode', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, ShipmentPartyIdentifier=None, ShipmentOrganisationName=None, ShipmentOrganisationDepartment=None, ShipmentOrganisationTaxCode=None, ShipmentCode=None, ShipmentPostalAddressDetails=None, ShipmentSiteCode=None):
@@ -14697,10 +16839,32 @@ class ShipmentPartyDetailsType(GeneratedsSuper):
     def set_ShipmentSiteCode(self, ShipmentSiteCode): self.ShipmentSiteCode = ShipmentSiteCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.ShipmentPartyIdentifier is not None or
@@ -14855,6 +17019,14 @@ class ShipmentPartyDetailsType(GeneratedsSuper):
 
 
 class ShipmentPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('ShipmentStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('ShipmentTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('ShipmentPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('ShipmentPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, ShipmentStreetName=None, ShipmentTownName=None, ShipmentPostCodeIdentifier=None, CountryCode=None, CountryName=None, ShipmentPostOfficeBoxIdentifier=None):
@@ -14891,13 +17063,39 @@ class ShipmentPostalAddressDetailsType(GeneratedsSuper):
     def set_ShipmentPostOfficeBoxIdentifier(self, ShipmentPostOfficeBoxIdentifier): self.ShipmentPostOfficeBoxIdentifier = ShipmentPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.ShipmentStreetName or
@@ -15030,6 +17228,15 @@ class ShipmentPostalAddressDetailsType(GeneratedsSuper):
 
 
 class PackageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('PackageLength', 'QuantityType0_14', 0),
+        MemberSpec_('PackageWidth', 'QuantityType0_14', 0),
+        MemberSpec_('PackageHeight', 'QuantityType0_14', 0),
+        MemberSpec_('PackageWeight', 'QuantityType0_14', 0),
+        MemberSpec_('PackageNetWeight', 'QuantityType0_14', 0),
+        MemberSpec_('PackageVolume', 'QuantityType0_14', 0),
+        MemberSpec_('TransportCarriageQuantity', 'QuantityType0_14', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, PackageLength=None, PackageWidth=None, PackageHeight=None, PackageWeight=None, PackageNetWeight=None, PackageVolume=None, TransportCarriageQuantity=None):
@@ -15213,6 +17420,10 @@ class PackageDetailsType(GeneratedsSuper):
 
 
 class DefinitionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DefinitionHeaderText', 'DefinitionHeaderTextType', 0),
+        MemberSpec_('DefinitionValue', 'QuantityType0_70', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DefinitionHeaderText=None, DefinitionValue=None):
@@ -15311,6 +17522,10 @@ class DefinitionDetailsType(GeneratedsSuper):
 
 
 class DefinitionHeaderTextType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DefinitionCode', 'genericTokenType1_20', 0),
+        MemberSpec_('valueOf_', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DefinitionCode=None, valueOf_=None):
@@ -15329,7 +17544,19 @@ class DefinitionHeaderTextType(GeneratedsSuper):
     def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
     def validate_genericTokenType1_20(self, value):
         # Validate type genericTokenType1_20, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.valueOf_
@@ -15397,6 +17624,10 @@ class DefinitionHeaderTextType(GeneratedsSuper):
 
 
 class RowDefinitionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowDefinitionHeaderText', 'RowDefinitionHeaderTextType', 0),
+        MemberSpec_('RowDefinitionValue', 'QuantityType0_70', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowDefinitionHeaderText=None, RowDefinitionValue=None):
@@ -15495,6 +17726,10 @@ class RowDefinitionDetailsType(GeneratedsSuper):
 
 
 class RowDefinitionHeaderTextType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DefinitionCode', 'genericTokenType1_20', 0),
+        MemberSpec_('valueOf_', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DefinitionCode=None, valueOf_=None):
@@ -15513,7 +17748,19 @@ class RowDefinitionHeaderTextType(GeneratedsSuper):
     def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
     def validate_genericTokenType1_20(self, value):
         # Validate type genericTokenType1_20, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.valueOf_
@@ -15581,6 +17828,28 @@ class RowDefinitionHeaderTextType(GeneratedsSuper):
 
 
 class RowOverDuePaymentDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowOriginalInvoiceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowOriginalInvoiceDate', 'date', 0),
+        MemberSpec_('RowOriginalDueDate', 'date', 0),
+        MemberSpec_('RowOriginalInvoiceTotalAmount', 'amount', 0),
+        MemberSpec_('RowOriginalEpiRemittanceInfoIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowPaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('RowPaidVatIncludedAmount', 'amount', 0),
+        MemberSpec_('RowPaidDate', 'date', 0),
+        MemberSpec_('RowUnPaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('RowUnPaidVatIncludedAmount', 'amount', 0),
+        MemberSpec_('RowCollectionDate', 'date', 0),
+        MemberSpec_('RowCollectionQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('RowCollectionChargeAmount', 'amount', 0),
+        MemberSpec_('RowInterestRate', ['percentage', 'xs:string'], 0),
+        MemberSpec_('RowInterestStartDate', 'date', 0),
+        MemberSpec_('RowInterestEndDate', 'date', 0),
+        MemberSpec_('RowInterestPeriodText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowInterestDateNumber', ['genericNMtokenType0_14', 'xs:token'], 0),
+        MemberSpec_('RowInterestChargeAmount', 'amount', 0),
+        MemberSpec_('RowInterestChargeVatAmount', 'amount', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowOriginalInvoiceIdentifier=None, RowOriginalInvoiceDate=None, RowOriginalDueDate=None, RowOriginalInvoiceTotalAmount=None, RowOriginalEpiRemittanceInfoIdentifier=None, RowPaidVatExcludedAmount=None, RowPaidVatIncludedAmount=None, RowPaidDate=None, RowUnPaidVatExcludedAmount=None, RowUnPaidVatIncludedAmount=None, RowCollectionDate=None, RowCollectionQuantity=None, RowCollectionChargeAmount=None, RowInterestRate=None, RowInterestStartDate=None, RowInterestEndDate=None, RowInterestPeriodText=None, RowInterestDateNumber=None, RowInterestChargeAmount=None, RowInterestChargeVatAmount=None):
@@ -15653,13 +17922,47 @@ class RowOverDuePaymentDetailsType(GeneratedsSuper):
     def set_RowInterestChargeVatAmount(self, RowInterestChargeVatAmount): self.RowInterestChargeVatAmount = RowInterestChargeVatAmount
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericNMtokenType0_14(self, value):
         # Validate type genericNMtokenType0_14, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 14 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..14 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 14 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..14 characters' )
+        return value
     def hasContent_(self):
         if (
             self.RowOriginalInvoiceIdentifier is not None or
@@ -15985,6 +18288,16 @@ class RowOverDuePaymentDetailsType(GeneratedsSuper):
 
 
 class RowAnyPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowAnyPartyText', 'anypartytexttype0_35', 0),
+        MemberSpec_('RowAnyPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAnyPartyOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('RowAnyPartyOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('RowAnyPartyOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAnyPartyPostalAddressDetails', 'RowAnyPartyPostalAddressDetailsType', 0),
+        MemberSpec_('RowAnyPartyOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAnyPartySiteCode', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowAnyPartyText=None, RowAnyPartyIdentifier=None, RowAnyPartyOrganisationName=None, RowAnyPartyOrganisationDepartment=None, RowAnyPartyOrganisationTaxCode=None, RowAnyPartyPostalAddressDetails=None, RowAnyPartyOrganisationUnitNumber=None, RowAnyPartySiteCode=None):
@@ -16033,10 +18346,32 @@ class RowAnyPartyDetailsType(GeneratedsSuper):
     def set_RowAnyPartySiteCode(self, RowAnyPartySiteCode): self.RowAnyPartySiteCode = RowAnyPartySiteCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.RowAnyPartyText is not None or
@@ -16203,6 +18538,14 @@ class RowAnyPartyDetailsType(GeneratedsSuper):
 
 
 class RowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowAnyPartyStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('RowAnyPartyTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('RowAnyPartyPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowAnyPartyPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowAnyPartyStreetName=None, RowAnyPartyTownName=None, RowAnyPartyPostCodeIdentifier=None, CountryCode=None, CountryName=None, RowAnyPartyPostOfficeBoxIdentifier=None):
@@ -16239,13 +18582,39 @@ class RowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
     def set_RowAnyPartyPostOfficeBoxIdentifier(self, RowAnyPartyPostOfficeBoxIdentifier): self.RowAnyPartyPostOfficeBoxIdentifier = RowAnyPartyPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.RowAnyPartyStreetName or
@@ -16378,6 +18747,12 @@ class RowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
 
 
 class RowProgressiveDiscountDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowDiscountPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('RowDiscountAmount', 'amount', 0),
+        MemberSpec_('RowDiscountTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('RowDiscountTypeText', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowDiscountPercent=None, RowDiscountAmount=None, RowDiscountTypeCode=None, RowDiscountTypeText=None):
@@ -16402,10 +18777,33 @@ class RowProgressiveDiscountDetailsType(GeneratedsSuper):
     def set_RowDiscountTypeText(self, RowDiscountTypeText): self.RowDiscountTypeText = RowDiscountTypeText
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.RowDiscountPercent is not None or
@@ -16510,6 +18908,10 @@ class RowProgressiveDiscountDetailsType(GeneratedsSuper):
 
 
 class CashDiscountVatDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('CashDiscountVatPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('CashDiscountVatAmount', 'amount', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, CashDiscountVatPercent=None, CashDiscountVatAmount=None):
@@ -16528,7 +18930,19 @@ class CashDiscountVatDetailsType(GeneratedsSuper):
     def set_CashDiscountVatAmount(self, CashDiscountVatAmount): self.CashDiscountVatAmount = CashDiscountVatAmount
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def hasContent_(self):
         if (
             self.CashDiscountVatPercent is not None or
@@ -16609,6 +19023,15 @@ class CashDiscountVatDetailsType(GeneratedsSuper):
 
 
 class RowPackageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('RowPackageLength', 'QuantityType0_14', 0),
+        MemberSpec_('RowPackageWidth', 'QuantityType0_14', 0),
+        MemberSpec_('RowPackageHeight', 'QuantityType0_14', 0),
+        MemberSpec_('RowPackageWeight', 'QuantityType0_14', 0),
+        MemberSpec_('RowPackageNetWeight', 'QuantityType0_14', 0),
+        MemberSpec_('RowPackageVolume', 'QuantityType0_14', 0),
+        MemberSpec_('RowTransportCarriageQuantity', 'QuantityType0_14', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, RowPackageLength=None, RowPackageWidth=None, RowPackageHeight=None, RowPackageWeight=None, RowPackageNetWeight=None, RowPackageVolume=None, RowTransportCarriageQuantity=None):
@@ -16792,6 +19215,13 @@ class RowPackageDetailsType(GeneratedsSuper):
 
 
 class SellerOfficialPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SellerOfficialStreetName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerOfficialTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SellerOfficialPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SellerOfficialStreetName=None, SellerOfficialTownName=None, SellerOfficialPostCodeIdentifier=None, CountryCode=None, CountryName=None):
@@ -16819,13 +19249,39 @@ class SellerOfficialPostalAddressDetailsType(GeneratedsSuper):
     def set_CountryName(self, CountryName): self.CountryName = CountryName
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SellerOfficialStreetName is not None or
@@ -16940,6 +19396,10 @@ class SellerOfficialPostalAddressDetailsType(GeneratedsSuper):
 
 
 class SubRowDefinitionDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowDefinitionHeaderText', 'SubRowDefinitionHeaderTextType', 0),
+        MemberSpec_('SubRowDefinitionValue', 'QuantityType0_70', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowDefinitionHeaderText=None, SubRowDefinitionValue=None):
@@ -17038,6 +19498,10 @@ class SubRowDefinitionDetailsType(GeneratedsSuper):
 
 
 class SubRowDefinitionHeaderTextType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('DefinitionCode', 'genericTokenType1_20', 0),
+        MemberSpec_('valueOf_', ['genericStringType0_70', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, DefinitionCode=None, valueOf_=None):
@@ -17056,7 +19520,19 @@ class SubRowDefinitionHeaderTextType(GeneratedsSuper):
     def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
     def validate_genericTokenType1_20(self, value):
         # Validate type genericTokenType1_20, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 1 <= value.__len__() <= 20 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 1..20 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 1 <= v.__len__() <= 20 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 1..20 characters' )
+        import re
+        return re.sub( ' {2,}',' ', re.sub( '\t|\r|\n', '', value.strip() ) )
     def hasContent_(self):
         if (
             self.valueOf_
@@ -17124,6 +19600,28 @@ class SubRowDefinitionHeaderTextType(GeneratedsSuper):
 
 
 class SubRowOverDuePaymentDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowOriginalInvoiceIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowOriginalInvoiceDate', 'date', 0),
+        MemberSpec_('SubRowOriginalDueDate', 'date', 0),
+        MemberSpec_('SubRowOriginalInvoiceTotalAmount', 'amount', 0),
+        MemberSpec_('SubRowOriginalEpiRemittanceInfoIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowPaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('SubRowPaidVatIncludedAmount', 'amount', 0),
+        MemberSpec_('SubRowPaidDate', 'date', 0),
+        MemberSpec_('SubRowUnPaidVatExcludedAmount', 'amount', 0),
+        MemberSpec_('SubRowUnPaidVatIncludedAmount', 'amount', 0),
+        MemberSpec_('SubRowCollectionDate', 'date', 0),
+        MemberSpec_('SubRowCollectionQuantity', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowCollectionChargeAmount', 'amount', 0),
+        MemberSpec_('SubRowInterestRate', ['percentage', 'xs:string'], 0),
+        MemberSpec_('SubRowInterestStartDate', 'date', 0),
+        MemberSpec_('SubRowInterestEndDate', 'date', 0),
+        MemberSpec_('SubRowInterestPeriodText', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowInterestDateNumber', ['genericNMtokenType0_14', 'xs:token'], 0),
+        MemberSpec_('SubRowInterestChargeAmount', 'amount', 0),
+        MemberSpec_('SubRowInterestChargeVatAmount', 'amount', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowOriginalInvoiceIdentifier=None, SubRowOriginalInvoiceDate=None, SubRowOriginalDueDate=None, SubRowOriginalInvoiceTotalAmount=None, SubRowOriginalEpiRemittanceInfoIdentifier=None, SubRowPaidVatExcludedAmount=None, SubRowPaidVatIncludedAmount=None, SubRowPaidDate=None, SubRowUnPaidVatExcludedAmount=None, SubRowUnPaidVatIncludedAmount=None, SubRowCollectionDate=None, SubRowCollectionQuantity=None, SubRowCollectionChargeAmount=None, SubRowInterestRate=None, SubRowInterestStartDate=None, SubRowInterestEndDate=None, SubRowInterestPeriodText=None, SubRowInterestDateNumber=None, SubRowInterestChargeAmount=None, SubRowInterestChargeVatAmount=None):
@@ -17196,13 +19694,47 @@ class SubRowOverDuePaymentDetailsType(GeneratedsSuper):
     def set_SubRowInterestChargeVatAmount(self, SubRowInterestChargeVatAmount): self.SubRowInterestChargeVatAmount = SubRowInterestChargeVatAmount
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericNMtokenType0_14(self, value):
         # Validate type genericNMtokenType0_14, a restriction on xs:token.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 14 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..14 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 14 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..14 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SubRowOriginalInvoiceIdentifier is not None or
@@ -17528,6 +20060,16 @@ class SubRowOverDuePaymentDetailsType(GeneratedsSuper):
 
 
 class SubRowAnyPartyDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowAnyPartyText', 'anypartytexttype0_35', 0),
+        MemberSpec_('SubRowAnyPartyIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAnyPartyOrganisationName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('SubRowAnyPartyOrganisationDepartment', ['genericStringType0_35', 'xs:string'], 1),
+        MemberSpec_('SubRowAnyPartyOrganisationTaxCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAnyPartyPostalAddressDetails', 'SubRowAnyPartyPostalAddressDetailsType', 0),
+        MemberSpec_('SubRowAnyPartyOrganisationUnitNumber', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAnyPartySiteCode', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowAnyPartyText=None, SubRowAnyPartyIdentifier=None, SubRowAnyPartyOrganisationName=None, SubRowAnyPartyOrganisationDepartment=None, SubRowAnyPartyOrganisationTaxCode=None, SubRowAnyPartyPostalAddressDetails=None, SubRowAnyPartyOrganisationUnitNumber=None, SubRowAnyPartySiteCode=None):
@@ -17576,10 +20118,32 @@ class SubRowAnyPartyDetailsType(GeneratedsSuper):
     def set_SubRowAnyPartySiteCode(self, SubRowAnyPartySiteCode): self.SubRowAnyPartySiteCode = SubRowAnyPartySiteCode
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SubRowAnyPartyText is not None or
@@ -17746,6 +20310,14 @@ class SubRowAnyPartyDetailsType(GeneratedsSuper):
 
 
 class SubRowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowAnyPartyStreetName', ['genericStringType2_35', 'xs:string'], 1),
+        MemberSpec_('SubRowAnyPartyTownName', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAnyPartyPostCodeIdentifier', ['genericStringType2_35', 'xs:string'], 0),
+        MemberSpec_('CountryCode', ['CountryCodeType', 'xs:NMTOKEN'], 0),
+        MemberSpec_('CountryName', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowAnyPartyPostOfficeBoxIdentifier', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowAnyPartyStreetName=None, SubRowAnyPartyTownName=None, SubRowAnyPartyPostCodeIdentifier=None, CountryCode=None, CountryName=None, SubRowAnyPartyPostOfficeBoxIdentifier=None):
@@ -17782,13 +20354,39 @@ class SubRowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
     def set_SubRowAnyPartyPostOfficeBoxIdentifier(self, SubRowAnyPartyPostOfficeBoxIdentifier): self.SubRowAnyPartyPostOfficeBoxIdentifier = SubRowAnyPartyPostOfficeBoxIdentifier
     def validate_genericStringType2_35(self, value):
         # Validate type genericStringType2_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 2 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 2..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 2 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 2..35 characters' )
+        return value
     def validate_CountryCodeType(self, value):
         # Validate type CountryCodeType, a restriction on xs:NMTOKEN.
-        pass
+        if ( isinstance( value, basestring ) and value.__len__() == 2 ):
+            pass
+        else:
+            raise_value_error( value, 'Expected ISO 3166-1 alpha-2' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SubRowAnyPartyStreetName or
@@ -17921,6 +20519,12 @@ class SubRowAnyPartyPostalAddressDetailsType(GeneratedsSuper):
 
 
 class SubRowProgressiveDiscountDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowDiscountPercent', ['percentage', 'xs:string'], 0),
+        MemberSpec_('SubRowDiscountAmount', 'amount', 0),
+        MemberSpec_('SubRowDiscountTypeCode', ['genericStringType0_35', 'xs:string'], 0),
+        MemberSpec_('SubRowDiscountTypeText', ['genericStringType0_35', 'xs:string'], 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowDiscountPercent=None, SubRowDiscountAmount=None, SubRowDiscountTypeCode=None, SubRowDiscountTypeText=None):
@@ -17945,10 +20549,33 @@ class SubRowProgressiveDiscountDetailsType(GeneratedsSuper):
     def set_SubRowDiscountTypeText(self, SubRowDiscountTypeText): self.SubRowDiscountTypeText = SubRowDiscountTypeText
     def validate_percentage(self, value):
         # Validate type percentage, a restriction on xs:string.
-        pass
+        import re
+        if ( isinstance( value, basestring ) ):
+            if ( re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value ) ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and re.match( '[1-9]?[0-9]{1,2}(,[0-9]{1,3})?', value) ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value in the format [1-9]?[0-9]{1,2}(,[0-9]{1,3})?' )
+        return value
     def validate_genericStringType0_35(self, value):
         # Validate type genericStringType0_35, a restriction on xs:string.
-        pass
+        if ( isinstance( value, basestring ) ):
+            if ( 0 <= value.__len__() <= 35 ):
+                pass
+            else:
+                raise_value_error( value, 'Expected value between 0..35 characters' )
+        else:
+            for v in value:
+                if ( isinstance( v, basestring ) and 0 <= v.__len__() <= 35 ):
+                    pass
+                else:
+                    raise_value_error( v, 'Expected value between 0..35 characters' )
+        return value
     def hasContent_(self):
         if (
             self.SubRowDiscountPercent is not None or
@@ -18053,6 +20680,15 @@ class SubRowProgressiveDiscountDetailsType(GeneratedsSuper):
 
 
 class SubRowPackageDetailsType(GeneratedsSuper):
+    member_data_items_ = [
+        MemberSpec_('SubRowPackageLength', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPackageWidth', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPackageHeight', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPackageWeight', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPackageNetWeight', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowPackageVolume', 'QuantityType0_14', 0),
+        MemberSpec_('SubRowTransportCarriageQuantity', 'QuantityType0_14', 0),
+    ]
     subclass = None
     superclass = None
     def __init__(self, SubRowPackageLength=None, SubRowPackageWidth=None, SubRowPackageHeight=None, SubRowPackageWeight=None, SubRowPackageNetWeight=None, SubRowPackageVolume=None, SubRowTransportCarriageQuantity=None):
