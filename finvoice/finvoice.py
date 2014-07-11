@@ -394,7 +394,7 @@ except ImportError, exp:
 # Globals
 #
 
-ExternalEncoding = 'iso8859-15'
+ExternalEncoding = 'iso-8859-15'
 Tag_pattern_ = re_.compile(r'({.*})?(.*)')
 String_cleanup_pat_ = re_.compile(r"[\n\r\s]+")
 Namespace_extract_pat_ = re_.compile(r'{(.*)}(.*)')

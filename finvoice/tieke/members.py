@@ -18,7 +18,7 @@
 ##
 
 class MemberLists:
-	def get_BanksList():
+	def get_BanksList(self):
 		return [ 
 			'OKOYFIHH', # OP-Pohjola-ryhmä
 			'NDEAFIHH', # Nordea
@@ -30,7 +30,7 @@ class MemberLists:
 			'SBANFIHH', # S-Pankki
 			'DNBAFIHX', # DnB NOR Bank
 		]
-	def get_ServicePorvidersList():
+	def get_ServicePorvidersList(self):
 		return [ 
 			'FIYAPSOL', # YAP Solutions Oy
 			'003723327487', # Apix Messaging Oy
@@ -50,3 +50,26 @@ class MemberLists:
 		]
 	def get_MembersList():
 		return self.get_BanksList() + self.get_MembersList()
+
+class PrintServiceList:
+	def get_PrintServiceList(self):
+		return {
+			'NDEAFIHH': 'tulostukseen',
+			'PSPBFIHH': '003718062728810P',
+			'DABAFIHH': '003718062728810P',
+			'HELSFIHH': 'TULOSTUSPALVELU',
+			'OKOYFIHH': 'TULOSTUSPALVELU',
+			'003710948874': 'EKIRJE',
+			'003723327487': 'TULOSTUS',
+			'003721291126': 'PRINT',
+		}
+
+class PrintService():
+	def get_PrintService(self, member_id):
+		psl = PrintServiceList()
+		l = psl.get_PrintServiceList()
+		if (l[member_id]):
+			return l[member_id];
+		return ''
+
+

@@ -86,7 +86,7 @@ def parsexml_(*args, **kwargs):
 # Globals
 #
 
-ExternalEncoding = 'iso8859-15'
+ExternalEncoding = 'iso-8859-15'
 
 #
 # Data representation classes
