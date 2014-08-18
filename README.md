@@ -31,6 +31,9 @@ XML generated has been used in actual transactions. XML from actual transactions
 ## Ilmoittamissanomat
 - FinvoiceSenderInfo (SI)
 
+## Finvoice
+- Finvoice
+
 ## SOAP EBML
 - Envelope
 - MessageHeader
